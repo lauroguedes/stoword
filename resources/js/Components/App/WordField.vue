@@ -11,53 +11,32 @@
                 class="w-full"
             />
             <div class="mt-2 space-x-2 text-right">
-                <PrimaryButton
-                    :disabled="!form.word || form.processing"
-                    type="submit"
-                >
-                    Generate
-                </PrimaryButton>
+                <PrimaryButton type="submit"> Generate </PrimaryButton>
             </div>
         </form>
-        <ul>
-            <li v-for="sentence in sentences">
-                {{ sentence }}
-            </li>
-        </ul>
+        <Loading v-if="loading" />
+        <div
+            v-if="data"
+            v-html="data.sentences"
+            class="m-3 text-slate-400"
+        ></div>
     </div>
 </template>
 
 <script setup>
-import { reactive, ref, toRef } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { useFetch } from "@/Composables/useFetch";
+import Loading from "@/Components/App/Loading.vue";
 
 const form = useForm({
     word: "",
 });
 
-const sentences = reactive({ data: [] });
+const { data, loading, error, getData } = useFetch();
 
-const onSubmit = () => {
-    // form.post(
-    //     route("generate.sentences"),
-    //     { word: form.word },
-    //     {
-    //         onSuccess: () => {
-    //             form.reset();
-    //         },
-    //     }
-    // );
-    // fetch(route("generate.sentences", { word: form.word })).then((data) => {
-    //     //console.log(res);
-    //     sentences.value = data;
-    // });
-    const { data, error } = useFetch(
-        route("generate.sentences", { word: form.word })
-    );
-
-    sentences.data = data;
+const onSubmit = async () => {
+    getData(route("generate.sentences", { word: form.word }));
 };
 </script>
