@@ -1,25 +1,21 @@
 <template>
-    <div>
+    <div class="max-w-2xl mx-auto">
         <form
             @submit.prevent="onSubmit"
-            class="p-3 bg-gray-200 dark:bg-gray-700 rounded-md"
+            class="p-5 bg-gray-200 dark:bg-gray-700 rounded-md flex justify-between items-center"
         >
             <TextInput
                 v-model="form.word"
                 type="text"
                 placeholder="Word or Expression ..."
-                class="w-full"
+                class="w-full h-16 text-2xl rounded-lg mr-3"
             />
-            <div class="mt-2 space-x-2 text-right">
-                <PrimaryButton type="submit"> Generate </PrimaryButton>
-            </div>
+            <PrimaryButton type="submit" class="h-16 text-md rounded-lg">
+                Generate
+            </PrimaryButton>
         </form>
         <Loading v-if="loading" />
-        <div
-            v-if="data"
-            v-html="data.sentences"
-            class="m-3 text-slate-400"
-        ></div>
+        <Sentences v-if="data.length" :sentences="data" />
     </div>
 </template>
 
@@ -28,7 +24,8 @@ import { useForm } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { useFetch } from "@/Composables/useFetch";
-import Loading from "@/Components/App/Loading.vue";
+import Loading from "./Loading.vue";
+import Sentences from "./Sentences.vue";
 
 const form = useForm({
     word: "",

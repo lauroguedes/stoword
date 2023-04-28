@@ -1,17 +1,17 @@
 import { ref } from "vue";
 
 export function useFetch() {
-    const data = ref(null);
+    const data = ref([]);
     const loading = ref(false);
     const error = ref(null);
 
     const getData = async (...params) => {
         loading.value = true;
-        data.value = null;
+        data.value = [];
         error.value = null;
         try {
             const response = await axios(...params);
-            data.value = response.data;
+            data.value = response.data.data;
         } catch (err) {
             error.value = err;
         }
