@@ -22,7 +22,7 @@ class GenerateSentencesController extends Controller
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'data' => $th->getMessage(),
+                'error' => $th->getMessage(),
             ], 500);
         }
     }
