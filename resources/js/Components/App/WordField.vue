@@ -61,10 +61,32 @@
                     type="text"
                     placeholder="Word or Expression ..."
                     class="w-full h-16 text-2xl rounded-lg mr-3"
+                    :disabled="loading"
                 />
-                <PrimaryButton type="submit" class="h-16 text-md rounded-lg">
+                <PrimaryButton
+                    :disabled="loading"
+                    type="submit"
+                    class="h-16 text-md rounded-lg"
+                >
                     Generate
                 </PrimaryButton>
+            </div>
+            <div
+                v-if="data.length"
+                class="mt-4 pt-2 text-right border-t border-slate-700 dark:border-slate-600 space-x-5"
+            >
+                <a
+                    :href="`https://translate.google.com/?sl=en&tl=pt&text=${wordSent}&op=translate`"
+                    target="_blank"
+                    class="text-slate-600 dark:text-slate-300 hover:opacity-80 hover:underline"
+                    ><Language class="mr-2 inline" />Translate PT-BR</a
+                >
+                <a
+                    :href="`https://youglish.com/pronounce/${wordSent}/english`"
+                    target="_blank"
+                    class="text-slate-600 dark:text-slate-300 hover:opacity-80 hover:underline"
+                    ><SpeakerWave class="mr-2 inline" />Pronunciation</a
+                >
             </div>
         </form>
         <Loading v-if="loading" />
@@ -82,24 +104,35 @@ import Loading from "./Loading.vue";
 import Sentences from "./Sentences.vue";
 import InputLabel from "../InputLabel.vue";
 import InputError from "../InputError.vue";
+import SpeakerWave from "../Icons/SpeakerWave.vue";
+import Language from "../Icons/Language.vue";
+import { ref } from "vue";
 
 const form = useForm({
     qtd_sentences: 1,
     level: "A1",
-    word: "",
+    word: "pencil",
 });
 
 const levelOptions = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
+const wordSent = ref(null);
+
 const { data, loading, error, getData } = useFetch();
 
 const onSubmit = async () => {
-    getData(
+    await getData(
         route("generate.sentences", {
             word: form.word,
             level: form.level,
             qtd_sentences: form.qtd_sentences,
         })
     );
+
+    wordSent.value = form.word;
+
+    if (!error.value) {
+        form.reset();
+    }
 };
 </script>
