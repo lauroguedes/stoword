@@ -3,7 +3,7 @@
         title="Copy"
         :disabled="wasCopied"
         @click="copyElement"
-        class="p-1 disabled:bg-transparent bg-slate-400 dark:bg-slate-600 shadow-sm rounded-md active:bg-slate-600/50 hover:bg-slate-600/80"
+        class="p-1 disabled:bg-transparent bg-gray-400 dark:bg-gray-700 shadow-sm rounded-md active:bg-gray-700/50 hover:bg-gray-700/80"
     >
         <Copy v-if="!wasCopied" />
         <Check v-else />

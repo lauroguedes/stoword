@@ -2,11 +2,13 @@
     <div class="max-w-2xl mx-auto">
         <form
             @submit.prevent="onSubmit"
-            class="p-5 bg-gray-200 dark:bg-gray-700 rounded-md"
+            class="p-5 bg-gray-200 dark:bg-gray-800 rounded-md"
         >
-            <div class="flex justify-between items-center mb-3">
+            <div class="flex justify-between items-center mb-4">
                 <div>
-                    <h1 class="text-gray-600 dark:text-gray-300 text-lg mb-2">
+                    <h1
+                        class="text-gray-800 dark:text-gray-400 font-bold text-lg mb-2"
+                    >
                         Qtd. Sentences
                     </h1>
                     <div class="flex justify-between items-center gap-3">
@@ -15,6 +17,7 @@
                                 type="radio"
                                 v-model="form.qtd_sentences"
                                 value="1"
+                                class="accent-indigo-400 dark:accent-indigo-600"
                             />
                             <InputLabel>One</InputLabel>
                         </div>
@@ -23,6 +26,7 @@
                                 type="radio"
                                 v-model="form.qtd_sentences"
                                 value="2"
+                                class="accent-indigo-400 dark:accent-indigo-600"
                             />
                             <InputLabel>Two</InputLabel>
                         </div>
@@ -31,13 +35,16 @@
                                 type="radio"
                                 v-model="form.qtd_sentences"
                                 value="3"
+                                class="accent-indigo-400 dark:accent-indigo-600"
                             />
                             <InputLabel>Three</InputLabel>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <h1 class="text-gray-600 dark:text-gray-300 text-lg mb-2">
+                    <h1
+                        class="text-gray-800 dark:text-gray-400 font-bold text-lg mb-2"
+                    >
                         Level
                     </h1>
                     <div class="flex justify-between items-center gap-3">
@@ -49,6 +56,7 @@
                                 type="radio"
                                 v-model="form.level"
                                 :value="level"
+                                class="accent-indigo-400 dark:accent-indigo-600"
                             />
                             <InputLabel>{{ level }}</InputLabel>
                         </div>
@@ -71,23 +79,7 @@
                     Generate
                 </PrimaryButton>
             </div>
-            <div
-                v-if="data.length"
-                class="mt-4 pt-2 text-right border-t border-slate-700 dark:border-slate-600 space-x-5"
-            >
-                <a
-                    :href="`https://translate.google.com/?sl=en&tl=pt&text=${wordSent}&op=translate`"
-                    target="_blank"
-                    class="text-slate-600 dark:text-slate-300 hover:opacity-80 hover:underline"
-                    ><Language class="mr-2 inline" />Translate PT-BR</a
-                >
-                <a
-                    :href="`https://youglish.com/pronounce/${wordSent}/english`"
-                    target="_blank"
-                    class="text-slate-600 dark:text-slate-300 hover:opacity-80 hover:underline"
-                    ><SpeakerWave class="mr-2 inline" />Pronunciation</a
-                >
-            </div>
+            <ExtraLinks v-if="data.length" :word-sent="wordSent" />
         </form>
         <Loading v-if="loading" />
         <InputError class="p-2 mt-2" :message="error" />
@@ -104,9 +96,8 @@ import Loading from "./Loading.vue";
 import Sentences from "./Sentences.vue";
 import InputLabel from "../InputLabel.vue";
 import InputError from "../InputError.vue";
-import SpeakerWave from "../Icons/SpeakerWave.vue";
-import Language from "../Icons/Language.vue";
 import { ref } from "vue";
+import ExtraLinks from "./ExtraLinks.vue";
 
 const form = useForm({
     qtd_sentences: 1,
