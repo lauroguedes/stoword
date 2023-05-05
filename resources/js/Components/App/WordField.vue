@@ -2,12 +2,12 @@
     <div class="max-w-2xl mx-auto">
         <form
             @submit.prevent="onSubmit"
-            class="p-5 bg-gray-200 dark:bg-gray-800 rounded-md"
+            class="p-5 bg-gray-200 dark:bg-gray-800 rounded-md shadow"
         >
             <div class="flex justify-between items-center mb-4">
                 <div>
                     <h1
-                        class="text-gray-800 dark:text-gray-400 font-bold text-lg mb-2"
+                        class="text-gray-600 dark:text-gray-400 font-bold text-lg mb-2"
                     >
                         Qtd. Sentences
                     </h1>
