@@ -1,0 +1,3 @@
+GET http://stoword.test/generate?word=book
+Content-Type: application/json
+Accept: application/json
