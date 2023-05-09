@@ -3,27 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GenerateSentencesRequest;
-use App\Services\OpenAiAdapter;
+use App\Services\GptService;
 
 class GenerateSentencesController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(GenerateSentencesRequest $request, OpenAiAdapter $openAi)
+    public function __invoke(GenerateSentencesRequest $request, GptService $gpt)
     {
         try {
-            $result = $openAi
-                ->setPrompt($request->word)
-                ->setMaxTokens(70)
-                ->generate();
+            // $data = $request->validated();
+
+            // $result = $gpt->generate($data);
+
+            sleep(2);
 
             return response()->json([
-                'sentences' => $result,
+                'data' => [
+                    'I had a <span class="highlight">pencil</span> on my cabinet',
+                    'The her <span class="highlight">pencil</span> was broken',
+                    'He has a <span class="highlight">pencil</span> inside his case'
+                ]
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'sentences' => $th->getMessage(),
+                'error' => $th->getMessage(),
             ], 500);
         }
     }

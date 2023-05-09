@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\PromptParams;
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Resources\Completions;
 use OpenAI\Responses\Completions\CreateResponse;
@@ -7,19 +8,39 @@ use OpenAI\Responses\Completions\CreateResponse;
 it('word field should be required')->todo();
 it('word field should has min 2 and max 20 characters')->todo();
 
-it('should return three sentences with the word or expression give', function (string $word) {
-    $response = "\n\n1. First prompt with {$word}.\n2. Second prompt with {$word}.\n3. Third prompt with {$word}.";
-    mockOpenAi($response);
+it(
+    'should return the sentences with the word or expression give according to params',
+    function (int $qtdSentences, string $level, string $word) {
+        $sentences = '';
 
-    authAs()->get("/generate?word={$word}")
-        ->assertOk()
-        ->assertJson([
-            'sentences' => $response,
-        ]);
+        for ($i = 0; $i < $qtdSentences; $i++) {
+            $sentences .= fake()->sentence(4) . " {$word}|";
+        }
 
-    openAiAssertSent(
-        config('openai.completion_model'),
-        config('openai.system_prompt') . ' ' . $word
-    );
-})->with(['book', 'hat'])
+        $response = str()->replaceLast('|', '', $sentences);
+
+        mockOpenAi($response);
+
+        authAs()->get("/generate?qtd_sentences={$qtdSentences}&level={$level}&word={$word}")
+            ->assertOk()
+            ->assertJson([
+                'data' => explode('|', $response),
+            ]);
+
+        $prompt = (new PromptParams(
+            $qtdSentences,
+            $level,
+            $word
+        ))->buildPrompt();
+
+        openAiAssertSent(
+            config('openai.completion_model'),
+            $prompt
+        );
+    }
+)->with([
+    [3, 'A1', 'book'],
+    [1, 'B2', 'hat'],
+    [2, 'B2', 'pencil'],
+])
     ->group('generate');

@@ -1,34 +1,27 @@
-import { reactive } from "vue";
-import { ref, isRef, toRefs, unref, watchEffect } from "vue";
+import { ref } from "vue";
 
-export function useFetch(url) {
-    // const data = ref(null);
-    // const error = ref(null);
+export function useFetch() {
+    const data = ref([]);
+    const loading = ref(false);
+    const error = ref(null);
 
-    const state = reactive({
-        data: null,
-        error: null,
-    });
+    const getData = async (...params) => {
+        loading.value = true;
+        data.value = [];
+        error.value = null;
+        try {
+            const response = await axios(...params);
+            data.value = response.data.data;
+        } catch (err) {
+            error.value = err.response.data.error;
+        }
+        loading.value = false;
+    };
 
-    function doFetch() {
-        // reset state before fetching..
-        state.data = null;
-        state.error = null;
-        // unref() unwraps potential refs
-        fetch(unref(url))
-            .then((res) => res.json())
-            .then((json) => (state.data = json))
-            .catch((err) => (state.error = err));
-    }
-
-    if (isRef(url)) {
-        // setup reactive re-fetch if input URL is a ref
-        watchEffect(doFetch);
-    } else {
-        // otherwise, just fetch once
-        // and avoid the overhead of a watcher
-        doFetch();
-    }
-
-    return { ...toRefs(state) };
+    return {
+        data,
+        loading,
+        error,
+        getData,
+    };
 }

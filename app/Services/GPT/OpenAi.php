@@ -12,7 +12,6 @@ class OpenAi
 
     public function __construct(
         private string $model,
-        private string $systemPrompt,
     ) {
         $this->maxTokens = 0;
         $this->temperature = 0;
@@ -26,11 +25,6 @@ class OpenAi
     public function setPrompt(string $prompt): void
     {
         $this->prompt = $prompt;
-    }
-
-    public function setSystemPrompt(string $systemPrompt): void
-    {
-        $this->systemPrompt = $systemPrompt;
     }
 
     public function setMaxTokens(int $maxTokens): void
@@ -55,9 +49,7 @@ class OpenAi
     {
         $options = [
             'model' => $this->model,
-            'prompt' => $this->systemPrompt
-                ? "{$this->systemPrompt} {$this->prompt}"
-                : $this->prompt,
+            'prompt' => $this->prompt,
         ];
 
         if ($this->maxTokens) {

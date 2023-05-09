@@ -18,13 +18,6 @@ class OpenAiAdapter implements Gpt
         return $this;
     }
 
-    public function setSystemPrompt(string $systemPrompt): OpenAiAdapter
-    {
-        $this->openAi->setSystemPrompt($systemPrompt);
-
-        return $this;
-    }
-
     public function setPrompt(string $prompt): OpenAiAdapter
     {
         $this->openAi->setPrompt($prompt);
