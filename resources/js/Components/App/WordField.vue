@@ -72,7 +72,7 @@
                     :disabled="loading"
                 />
                 <PrimaryButton
-                    :disabled="loading"
+                    :disabled="loading || !form.word || form.word.length > 20"
                     type="submit"
                     class="h-16 text-md rounded-lg"
                 >
@@ -102,12 +102,12 @@ import ExtraLinks from "./ExtraLinks.vue";
 const form = useForm({
     qtd_sentences: 1,
     level: "A1",
-    word: "pencil",
+    word: "",
 });
 
 const levelOptions = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
-const wordSent = ref(null);
+const wordSent = ref("");
 
 const { data, loading, error, getData } = useFetch();
 

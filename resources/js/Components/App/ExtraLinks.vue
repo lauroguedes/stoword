@@ -3,6 +3,12 @@
         class="mt-4 pt-2 text-right border-t border-gray-300 dark:border-gray-700 space-x-5"
     >
         <a
+            :href="`https://tenor.com/search/${wordSent}-gifs/`"
+            target="_blank"
+            class="text-gray-500 dark:text-gray-400 hover:opacity-80 hover:underline"
+            ><Gif class="mr-2 inline" />Image</a
+        >
+        <a
             :href="`https://dictionary.cambridge.org/us/dictionary/english/${wordSent}`"
             target="_blank"
             class="text-gray-500 dark:text-gray-400 hover:opacity-80 hover:underline"
@@ -19,7 +25,7 @@
             :href="`https://translate.google.com/?sl=en&tl=pt&text=${wordSent}&op=translate`"
             target="_blank"
             class="text-gray-500 dark:text-gray-400 hover:opacity-80 hover:underline"
-            ><Language class="mr-2 inline" />Translate PT-BR</a
+            ><Language class="mr-2 inline" />Translate</a
         >
     </div>
 </template>
@@ -28,6 +34,7 @@
 import SpeakerWave from "../Icons/SpeakerWave.vue";
 import Language from "../Icons/Language.vue";
 import AcademicCap from "../Icons/AcademicCap.vue";
+import Gif from "../Icons/Gif.vue";
 
 const props = defineProps({
     wordSent: {
