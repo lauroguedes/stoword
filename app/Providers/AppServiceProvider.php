@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
-use App\Services\GPT\OpenAi;
-use App\Services\GptService;
-use App\Services\OpenAiAdapter;
+use App\Services\GPT\Adapters\AdapterAiClientContract;
+use App\Services\GPT\Adapters\OpenAiAdapter;
+use App\Services\GPT\GptService;
+use App\Services\GPT\OpenAi\Chat;
+use App\Services\GPT\OpenAi\Completions;
+
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,18 +17,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(OpenAi::class, function () {
-            return new OpenAi(
-                config('openai.completion_model')
-            );
-        });
-
-        $this->app->bind(OpenAiAdapter::class, function ($app) {
-            return new OpenAiAdapter($app->make(OpenAi::class));
+        $this->app->bind(AdapterAiClientContract::class, function ($app) {
+            return new OpenAiAdapter($app->make(Chat::class));
         });
 
         $this->app->bind(GptService::class, function ($app) {
-            return new GptService($app->make(OpenAiAdapter::class));
+            return new GptService($app->make(AdapterAiClientContract::class));
         });
     }
 

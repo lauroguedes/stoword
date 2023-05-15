@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GenerateSentencesRequest;
-use App\Services\GptService;
+use App\Services\GPT\GptService;
 
 class GenerateSentencesController extends Controller
 {
@@ -13,12 +13,8 @@ class GenerateSentencesController extends Controller
     public function __invoke(GenerateSentencesRequest $request, GptService $gpt)
     {
         try {
-            $data = $request->validated();
-
-            $result = $gpt->generate($data);
-
             return response()->json([
-                'data' => $result
+                'data' => $gpt->generate($request->validated())
             ]);
         } catch (\Throwable $th) {
             return response()->json([
