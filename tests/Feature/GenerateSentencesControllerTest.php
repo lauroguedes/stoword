@@ -1,9 +1,6 @@
 <?php
 
-use App\Services\PromptParams;
-use OpenAI\Laravel\Facades\OpenAI;
-use OpenAI\Resources\Completions;
-use OpenAI\Responses\Completions\CreateResponse;
+use App\Services\GPT\PromptParams;
 
 it('word field should be required')->todo();
 it('word field should has min 2 and max 20 characters')->todo();

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GenerateSentencesRequest;
-use App\Services\GptService;
+use App\Services\GPT\GptService;
 
 class GenerateSentencesController extends Controller
 {
@@ -21,6 +21,7 @@ class GenerateSentencesController extends Controller
                 'data' => $result
             ]);
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             return response()->json([
                 'error' => $th->getMessage(),
             ], 500);

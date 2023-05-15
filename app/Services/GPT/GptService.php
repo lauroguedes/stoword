@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\GPT;
 
-use App\Http\Requests\GenerateSentencesRequest;
+use App\Services\GPT\Adapters\AdapterAiClientContract;
 
 class GptService
 {
     public function __construct(
-        private Gpt $gptApi
+        private AdapterAiClientContract $gptApi
     ) {
     }
 
