@@ -115,8 +115,8 @@ const onSubmit = async () => {
     await getData(
         route("generate.sentences", {
             word: form.word,
-            level: form.level,
             qtd_sentences: form.qtd_sentences,
+            level: form.level,
         })
     );
 

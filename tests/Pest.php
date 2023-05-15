@@ -15,8 +15,10 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use OpenAI\Laravel\Facades\OpenAI;
-use OpenAI\Responses\Completions\CreateResponse;
+use OpenAI\Responses\Completions\CreateResponse as ResponseCompletions;
+use OpenAI\Responses\Chat\CreateResponse as ResponseChat;
 use OpenAI\Resources\Completions;
+use OpenAI\Resources\Chat;
 
 use function Pest\Laravel\{actingAs};
 
@@ -61,13 +63,19 @@ function authAs()
 
 function mockOpenAi(string $response = 'awesome!')
 {
-
     OpenAI::fake([
-        CreateResponse::fake([
+        // ResponseCompletions::fake([
+        //     'choices' => [
+        //         [
+        //             'text' => $response,
+        //         ],
+        //     ],
+        // ]),
+        ResponseChat::fake([
             'choices' => [
                 [
-                    'text' => $response
-                ]
+                    'message' => ['content' => $response],
+                ],
             ],
         ]),
     ]);
@@ -84,6 +92,21 @@ function openAiAssertSent($model, $prompt, $maxTokens = 0, $temperature = 0)
             return $method === 'create' &&
                 $parameters['model'] === $model &&
                 $parameters['prompt'] === $prompt;
+        }
+    );
+}
+
+function openAiChatAssertSent($model, $prompt, $maxTokens = 0, $temperature = 0)
+{
+    OpenAI::assertSent(
+        Chat::class,
+        function (string $method, array $parameters) use (
+            $model,
+            $prompt
+        ): bool {
+            return $method === 'create' &&
+                $parameters['model'] === $model &&
+                $parameters['messages'] === $prompt;
         }
     );
 }

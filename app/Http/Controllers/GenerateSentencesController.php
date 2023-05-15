@@ -13,15 +13,10 @@ class GenerateSentencesController extends Controller
     public function __invoke(GenerateSentencesRequest $request, GptService $gpt)
     {
         try {
-            $data = $request->validated();
-
-            $result = $gpt->generate($data);
-
             return response()->json([
-                'data' => $result
+                'data' => $gpt->generate($request->validated())
             ]);
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             return response()->json([
                 'error' => $th->getMessage(),
             ], 500);

@@ -18,7 +18,14 @@ return [
     /*
     | Other settings
     */
-    'system_prompt' => env('OPENAI_SYSTEM_PROMPT', 'You are an English Teacher'),
+    'system_completions_prompt' => env(
+        'OPENAI_SYSTEM_COMPLETIONS_PROMPT',
+        'Create %d sentences in English for the level %s with the word %s separating them with pipe and do not use line break, bookmarks or html tags'
+    ),
+    'system_chat_prompt' => env(
+        'OPENAI_SYSTEM_CHAT_PROMPT',
+        'Create short sentences in English with the word, quantity of sentences, and English level that I send you. Remove the line break, bookmarks, html tags and separate them with a pipe'
+    ),
     'completion_model' => env('OPENAI_COMPLETION_MODEL', 'text-davinci-003'),
     'chat_model' => env('OPENAI_CHAT_MODEL', 'gpt-3.5-turbo'),
 ];

@@ -13,8 +13,23 @@ class OpenAiAdapter implements AdapterAiClientContract
     ) {
     }
 
-    public function setPrompt(string $prompt): static
+    public function mountPrompt(string $word, int $qtdSentences, string $level): static
     {
+        if ($this->openAi instanceof Completions) {
+            $prompt = sprintf(
+                config('openai.system_completions_prompt'),
+                $qtdSentences,
+                $level,
+                $word,
+            );
+
+            $this->openAi->setPrompt($prompt);
+
+            return $this;
+        }
+
+        $prompt = "{$word}, {$qtdSentences}, {$level}";
+
         $this->openAi->setPrompt($prompt);
 
         return $this;
