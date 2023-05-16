@@ -26,6 +26,5 @@ return [
         'OPENAI_SYSTEM_CHAT_PROMPT',
         'Create short sentences in English with the word, quantity of sentences, and English level that I send you. Remove the line break, bookmarks, html tags and separate them with a pipe'
     ),
-    'completion_model' => env('OPENAI_COMPLETION_MODEL', 'text-davinci-003'),
-    'chat_model' => env('OPENAI_CHAT_MODEL', 'gpt-3.5-turbo'),
+    'model' => env('OPEN_AI_MODEL', 'text-davinci-003'),
 ];

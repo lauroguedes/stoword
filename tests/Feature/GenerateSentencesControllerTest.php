@@ -1,6 +1,6 @@
 <?php
 
-use App\Services\GPT\PromptParams;
+use App\Services\GPT\Enum\GptModelTypes;
 
 it('word field should be required')->todo();
 it('word field should has min 2 and max 20 characters')->todo();
@@ -66,7 +66,7 @@ it('should return the sentences with the word give according to params for chat 
     ];
 
     openAiChatAssertSent(
-        config('openai.chat_model'),
+        GptModelTypes::GPT_3,
         $prompt
     );
 })->with([

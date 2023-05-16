@@ -3,6 +3,7 @@
 namespace App\Services\GPT\OpenAi;
 
 use App\Services\GPT\AiClientContract;
+use App\Services\GPT\Enum\GptModelTypes;
 use OpenAI\Laravel\Facades\OpenAI as FacadeOpenAi;
 
 class Chat extends OpenAiClient implements AiClientContract
@@ -22,7 +23,7 @@ class Chat extends OpenAiClient implements AiClientContract
     protected function mountParams(): array
     {
         $options = [
-            'model' => config('openai.chat_model'),
+            'model' => GptModelTypes::GPT_3,
             'messages' => [
                 ['role' => 'system', 'content' => config('openai.system_chat_prompt')],
                 ['role' => 'user', 'content' => $this->prompt],
