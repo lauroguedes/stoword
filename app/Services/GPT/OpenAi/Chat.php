@@ -23,7 +23,7 @@ class Chat extends OpenAiClient implements AiClientContract
     protected function mountParams(): array
     {
         $options = [
-            'model' => GptModelTypes::GPT_3,
+            'model' => GptModelTypes::GPT_3->value,
             'messages' => [
                 ['role' => 'system', 'content' => config('openai.system_chat_prompt')],
                 ['role' => 'user', 'content' => $this->prompt],

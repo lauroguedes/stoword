@@ -15,9 +15,10 @@ class GptService
     {
         $response = $this->gptApi
             ->mountPrompt($params['word'], $params['qtd_sentences'], $params['level'])
-            ->setMaxTokens(70)
             ->generate();
 
-        return explode('|', $response);
+        return is_array($response)
+            ? $response
+            : explode('|', $response);
     }
 }

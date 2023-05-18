@@ -27,4 +27,6 @@ return [
         'Create short sentences in English with the word, quantity of sentences, and English level that I send you. Remove the line break, bookmarks, html tags and separate them with a pipe'
     ),
     'model' => env('OPEN_AI_MODEL', 'text-davinci-003'),
+    'max_tokens' => env('OPEN_AI_MAX_TOKENS', 100),
+    'temperature' => env('OPEN_AI_TEMPERATURE', 0.7),
 ];

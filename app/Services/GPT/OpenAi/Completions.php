@@ -24,7 +24,7 @@ class Completions extends OpenAiClient implements AiClientContract
     protected function mountParams(): array
     {
         $options = [
-            'model' => GptModelTypes::DAVINCI,
+            'model' => GptModelTypes::DAVINCI->value,
             'prompt' => $this->prompt,
         ];
 

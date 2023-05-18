@@ -10,8 +10,8 @@ abstract class OpenAiClient
 
     public function __construct()
     {
-        $this->maxTokens = 0;
-        $this->temperature = 0;
+        $this->maxTokens = config('openai.max_tokens');
+        $this->temperature = config('openai.temperature');
     }
 
     public function setPrompt(string $prompt): void
