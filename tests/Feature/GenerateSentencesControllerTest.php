@@ -25,14 +25,33 @@ it(
                 'data' => explode('|', $responseMock),
             ]);
 
-        $prompt = sprintf(
-            config('openai.system_completions_prompt'),
-            $params['qtd_sentences'],
-            $params['level'],
+        openAiCompletionsAssertSent($params, 70, 0.1);
+    }
+)
+    ->with('params_for_sentences')
+    ->group('generate_controller');
+
+it(
+    'should send the prompt to the Chat open ai client',
+    function (array $params) {
+
+        config()->set('openai.model', GptModelTypes::GPT_3->value);
+        config()->set('openai.max_tokens', 70);
+        config()->set('openai.temperature', 0.1);
+
+        $responseMock = mountResponseMock(
             $params['word'],
+            $params['qtd_sentences'],
         );
 
-        openAiCompletionsAssertSent($prompt, 70, 0.1);
+        mockChatOpenAi($responseMock);
+        authAs()->get("/generate?word={$params['word']}&qtd_sentences={$params['qtd_sentences']}&level={$params['level']}")
+            ->assertOk()
+            ->assertJson([
+                'data' => explode('|', $responseMock),
+            ]);
+
+        openAiChatAssertSent($params, 70, 0.1);
     }
 )
     ->with('params_for_sentences')

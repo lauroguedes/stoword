@@ -88,8 +88,15 @@ function mockCompletionsOpenAi(string $response = 'awesome!'): void
     ]);
 }
 
-function openAiCompletionsAssertSent(string $prompt, int $maxTokens, float $temperature): void
+function openAiCompletionsAssertSent(array $params, int $maxTokens, float $temperature): void
 {
+    $prompt = sprintf(
+        config('openai.system_completions_prompt'),
+        $params['qtd_sentences'],
+        $params['level'],
+        $params['word'],
+    );
+
     OpenAI::assertSent(
         Completions::class,
         function (string $method, array $parameters) use (
@@ -106,18 +113,26 @@ function openAiCompletionsAssertSent(string $prompt, int $maxTokens, float $temp
     );
 }
 
-function openAiChatAssertSent(string $prompt, int $maxTokens, float $temperature): void
+function openAiChatAssertSent(array $params, int $maxTokens, float $temperature): void
 {
+    $prompt = "{$params['word']}, {$params['qtd_sentences']}, {$params['level']}";
+
+    $messages = [
+        ['role' => 'system', 'content' => config('openai.system_chat_prompt')],
+        ['role' => 'user', 'content' => $prompt],
+    ];
+
     OpenAI::assertSent(
         Chat::class,
         function (string $method, array $parameters) use (
             $prompt,
             $maxTokens,
-            $temperature
+            $temperature,
+            $messages,
         ): bool {
             return $method === 'create' &&
                 $parameters['model'] === GptModelTypes::GPT_3->value &&
-                $parameters['messages'] === $prompt &&
+                $parameters['messages'] === $messages &&
                 $parameters['max_tokens'] === $maxTokens &&
                 $parameters['temperature'] === $temperature;
         }
