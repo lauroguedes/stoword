@@ -67,7 +67,7 @@
                 <TextInput
                     v-model="form.word"
                     type="text"
-                    placeholder="Word or Expression ..."
+                    placeholder="Word or Phrasal verb ..."
                     class="w-full h-16 text-2xl rounded-lg mr-3"
                     :disabled="loading"
                 />
