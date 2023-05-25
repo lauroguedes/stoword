@@ -12,6 +12,7 @@
 */
 
 use App\Models\User;
+use App\Services\GPT\Enum\GptModelTypes;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use OpenAI\Laravel\Facades\OpenAI;
@@ -61,16 +62,9 @@ function authAs()
     return actingAs($user);
 }
 
-function mockOpenAi(string $response = 'awesome!')
+function mockChatOpenAi(string $response = 'awesome!'): void
 {
     OpenAI::fake([
-        // ResponseCompletions::fake([
-        //     'choices' => [
-        //         [
-        //             'text' => $response,
-        //         ],
-        //     ],
-        // ]),
         ResponseChat::fake([
             'choices' => [
                 [
@@ -81,32 +75,77 @@ function mockOpenAi(string $response = 'awesome!')
     ]);
 }
 
-function openAiAssertSent($model, $prompt, $maxTokens = 0, $temperature = 0)
+function mockCompletionsOpenAi(string $response = 'awesome!'): void
 {
+    OpenAI::fake([
+        ResponseCompletions::fake([
+            'choices' => [
+                [
+                    'text' => $response,
+                ],
+            ],
+        ]),
+    ]);
+}
+
+function openAiCompletionsAssertSent(array $params, int $maxTokens, float $temperature): void
+{
+    $prompt = sprintf(
+        config('openai.system_completions_prompt'),
+        $params['qtd_sentences'],
+        $params['level'],
+        $params['word'],
+    );
+
     OpenAI::assertSent(
         Completions::class,
         function (string $method, array $parameters) use (
-            $model,
-            $prompt
+            $prompt,
+            $maxTokens,
+            $temperature
         ): bool {
             return $method === 'create' &&
-                $parameters['model'] === $model &&
-                $parameters['prompt'] === $prompt;
+                $parameters['model'] === GptModelTypes::DAVINCI->value &&
+                $parameters['prompt'] === $prompt &&
+                $parameters['max_tokens'] === $maxTokens &&
+                $parameters['temperature'] === $temperature;
         }
     );
 }
 
-function openAiChatAssertSent($model, $prompt, $maxTokens = 0, $temperature = 0)
+function openAiChatAssertSent(array $params, int $maxTokens, float $temperature): void
 {
+    $prompt = "{$params['word']}, {$params['qtd_sentences']}, {$params['level']}";
+
+    $messages = [
+        ['role' => 'system', 'content' => config('openai.system_chat_prompt')],
+        ['role' => 'user', 'content' => $prompt],
+    ];
+
     OpenAI::assertSent(
         Chat::class,
         function (string $method, array $parameters) use (
-            $model,
-            $prompt
+            $prompt,
+            $maxTokens,
+            $temperature,
+            $messages,
         ): bool {
             return $method === 'create' &&
-                $parameters['model'] === $model &&
-                $parameters['messages'] === $prompt;
+                $parameters['model'] === GptModelTypes::GPT_3->value &&
+                $parameters['messages'] === $messages &&
+                $parameters['max_tokens'] === $maxTokens &&
+                $parameters['temperature'] === $temperature;
         }
     );
+}
+
+function mountResponseMock(string $word, int $qtdSentences): string
+{
+    $sentences = '';
+
+    for ($i = 0; $i < $qtdSentences; $i++) {
+        $sentences .= fake()->sentence(4) . " {$word}|";
+    }
+
+    return str()->replaceLast('|', '', $sentences);
 }

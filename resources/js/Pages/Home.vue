@@ -1,6 +1,7 @@
 <script setup>
 import Logo from "@/Components/Images/stoword_logo.png";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, router } from "@inertiajs/vue3";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 defineProps({
     canLogin: {
@@ -26,13 +27,27 @@ defineProps({
     <div
         class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white"
     >
+        <div class="fixed top-6 right-6">
+            <Link
+                :href="route('login')"
+                class="font-semibold uppercase text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+                >Sign in</Link
+            >
+            <PrimaryButton
+                v-if="canRegister"
+                @click="router.visit(route('register'))"
+                class="ml-4"
+            >
+                Sign up
+            </PrimaryButton>
+        </div>
         <div class="w-full mx-auto p-6 lg:p-8">
             <div class="flex flex-col items-center justify-center space-y-7">
                 <img :src="Logo" alt="Logo" class="max-w-xs" />
                 <div class="w-full" v-if="canLogin">
                     <div class="flex flex-col items-center space-y-5">
                         <div
-                            class="w-1/2 space-y-5 dark:text-gray-200 text-gray-800 text-lg text-center"
+                            class="w-1/2 space-y-5 dark:text-gray-200 text-gray-800 text-md text-center"
                         >
                             <p>
                                 With just a few taps, you can
@@ -49,6 +64,15 @@ defineProps({
                                 >
                                 and grammar skills.
                             </p>
+                            <div class="aspect-w-16 aspect-h-9">
+                                <iframe
+                                    src="https://www.youtube-nocookie.com/embed/RYuKoLVWXSY?controls=0&autoplay=1"
+                                    title="YouTube video player"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen
+                                ></iframe>
+                            </div>
                             <p>
                                 You can choose to generate up to
                                 <span class="highlight bg-secondary"
@@ -69,20 +93,26 @@ defineProps({
                         </div>
                     </div>
                 </div>
-                <div>
-                    <Link
-                        :href="route('login')"
-                        class="font-semibold uppercase text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                        >Log in</Link
-                    >
-
-                    <Link
-                        v-if="canRegister"
-                        :href="route('register')"
-                        class="ml-4 font-semibold uppercase text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                        >Register</Link
-                    >
-                </div>
+                <footer
+                    class="text-gray-400 dark:text-gray-600 text-center text-sm"
+                >
+                    <div>
+                        © 2023 ·
+                        <a
+                            href="https://github.com/lauroguedes/stoword"
+                            class="underline hover:opacity-90"
+                            >Stoword Project</a
+                        >
+                        by
+                        <a
+                            class="underline hover:opacity-90"
+                            href="https://github.com/lauroguedes"
+                            target="_blank"
+                            >Lauro Guedes</a
+                        >
+                    </div>
+                    <div>MIT License</div>
+                </footer>
             </div>
         </div>
     </div>

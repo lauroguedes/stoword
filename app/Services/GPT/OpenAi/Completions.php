@@ -3,6 +3,7 @@
 namespace App\Services\GPT\OpenAi;
 
 use App\Services\GPT\AiClientContract;
+use App\Services\GPT\Enum\GptModelTypes;
 use OpenAI\Laravel\Facades\OpenAI as FacadeOpenAi;
 
 class Completions extends OpenAiClient implements AiClientContract
@@ -23,7 +24,7 @@ class Completions extends OpenAiClient implements AiClientContract
     protected function mountParams(): array
     {
         $options = [
-            'model' => config('openai.completion_model'),
+            'model' => GptModelTypes::DAVINCI->value,
             'prompt' => $this->prompt,
         ];
 

@@ -1,76 +1,58 @@
 <?php
 
-use App\Services\GPT\PromptParams;
+use App\Services\GPT\Enum\GptModelTypes;
 
 it('word field should be required')->todo();
 it('word field should has min 2 and max 20 characters')->todo();
 
 it(
-    'should return the sentences with the word give according to params for completions model',
-    function (int $qtdSentences, string $level, string $word) {
-        $sentences = '';
+    'should send the prompt to the Completions open ai client',
+    function (array $params) {
 
-        for ($i = 0; $i < $qtdSentences; $i++) {
-            $sentences .= fake()->sentence(4) . " {$word}|";
-        }
+        config()->set('openai.model', GptModelTypes::DAVINCI->value);
+        config()->set('openai.max_tokens', 70);
+        config()->set('openai.temperature', 0.1);
 
-        $response = str()->replaceLast('|', '', $sentences);
+        $responseMock = mountResponseMock(
+            $params['word'],
+            $params['qtd_sentences'],
+        );
 
-        mockOpenAi($response);
-
-        authAs()->get("/generate?qtd_sentences={$qtdSentences}&level={$level}&word={$word}")
+        mockCompletionsOpenAi($responseMock);
+        authAs()->get("/generate?word={$params['word']}&qtd_sentences={$params['qtd_sentences']}&level={$params['level']}")
             ->assertOk()
             ->assertJson([
-                'data' => explode('|', $response),
+                'data' => explode('|', $responseMock),
             ]);
 
-        $prompt = sprintf(
-            config('openai.system_completions_prompt'),
-            $qtdSentences,
-            $level,
-            $word,
+        openAiCompletionsAssertSent($params, 70, 0.1);
+    }
+)
+    ->with('params_for_sentences')
+    ->group('generate_controller');
+
+it(
+    'should send the prompt to the Chat open ai client',
+    function (array $params) {
+
+        config()->set('openai.model', GptModelTypes::GPT_3->value);
+        config()->set('openai.max_tokens', 70);
+        config()->set('openai.temperature', 0.1);
+
+        $responseMock = mountResponseMock(
+            $params['word'],
+            $params['qtd_sentences'],
         );
 
-        openAiAssertSent(
-            config('openai.completion_model'),
-            $prompt
-        );
+        mockChatOpenAi($responseMock);
+        authAs()->get("/generate?word={$params['word']}&qtd_sentences={$params['qtd_sentences']}&level={$params['level']}")
+            ->assertOk()
+            ->assertJson([
+                'data' => explode('|', $responseMock),
+            ]);
+
+        openAiChatAssertSent($params, 70, 0.1);
     }
-)->with([
-    [3, 'A1', 'book'],
-    [1, 'B2', 'hat'],
-    [2, 'B2', 'pencil'],
-])->skip('Testing chat model');
-
-
-it('should return the sentences with the word give according to params for chat model', function (int $qtdSentences, string $level, string $word) {
-    $sentences = '';
-
-    for ($i = 0; $i < $qtdSentences; $i++) {
-        $sentences .= fake()->sentence(4) . " {$word}|";
-    }
-
-    $response = str()->replaceLast('|', '', $sentences);
-
-    mockOpenAi($response);
-
-    authAs()->get("/generate?qtd_sentences={$qtdSentences}&level={$level}&word={$word}")
-        ->assertOk()
-        ->assertJson([
-            'data' => explode('|', $response),
-        ]);
-
-    $prompt = [
-        ['role' => 'system', 'content' => config('openai.system_chat_prompt')],
-        ['role' => 'user', 'content' => "{$word}, {$qtdSentences}, {$level}"],
-    ];
-
-    openAiChatAssertSent(
-        config('openai.chat_model'),
-        $prompt
-    );
-})->with([
-    [3, 'A1', 'book'],
-    [1, 'B2', 'hat'],
-    [2, 'B2', 'pencil'],
-])->group('generate');
+)
+    ->with('params_for_sentences')
+    ->group('generate_controller');
