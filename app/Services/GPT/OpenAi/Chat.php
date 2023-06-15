@@ -4,13 +4,14 @@ namespace App\Services\GPT\OpenAi;
 
 use App\Services\GPT\AiClientContract;
 use App\Services\GPT\Enum\GptModelTypes;
-use OpenAI\Laravel\Facades\OpenAI as FacadeOpenAi;
 
 class Chat extends OpenAiClient implements AiClientContract
 {
     public function create(): string
     {
-        $response = FacadeOpenAi::chat()->create($this->mountParams());
+        $response = $this->client
+            ->chat()
+            ->create($this->mountParams());
 
         return $response->choices[0]->message->content;
     }
