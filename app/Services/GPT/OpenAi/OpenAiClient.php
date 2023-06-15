@@ -2,14 +2,18 @@
 
 namespace App\Services\GPT\OpenAi;
 
+use OpenAI\Contracts\ClientContract;
+
 abstract class OpenAiClient
 {
+    protected mixed $client;
     protected string $prompt;
     protected int $maxTokens;
     protected float $temperature;
 
-    public function __construct()
+    public function __construct(ClientContract $client)
     {
+        $this->client = $client;
         $this->maxTokens = config('openai.max_tokens');
         $this->temperature = config('openai.temperature');
     }

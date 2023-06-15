@@ -15,11 +15,11 @@ use App\Models\User;
 use App\Services\GPT\Enum\GptModelTypes;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use OpenAI\Laravel\Facades\OpenAI;
-use OpenAI\Responses\Completions\CreateResponse as ResponseCompletions;
-use OpenAI\Responses\Chat\CreateResponse as ResponseChat;
 use OpenAI\Resources\Completions;
 use OpenAI\Resources\Chat;
+use OpenAI\Responses\Chat\CreateResponse as ChatResponse;
+use OpenAI\Responses\Completions\CreateResponse as CompletionsResponse;
+use OpenAI\Testing\ClientFake;
 
 use function Pest\Laravel\{actingAs};
 
@@ -62,34 +62,38 @@ function authAs()
     return actingAs($user);
 }
 
-function mockChatOpenAi(string $response = 'awesome!'): void
+function mockChatOpenAi(string $response = 'awesome!'): ClientFake
 {
-    OpenAI::fake([
-        ResponseChat::fake([
+    return new ClientFake([
+        ChatResponse::fake([
             'choices' => [
                 [
                     'message' => ['content' => $response],
                 ],
             ],
-        ]),
+        ])
     ]);
 }
 
-function mockCompletionsOpenAi(string $response = 'awesome!'): void
+function mockCompletionsOpenAi(string $response = 'awesome!'): ClientFake
 {
-    OpenAI::fake([
-        ResponseCompletions::fake([
+    return new ClientFake([
+        CompletionsResponse::fake([
             'choices' => [
                 [
                     'text' => $response,
                 ],
             ],
-        ]),
+        ])
     ]);
 }
 
-function openAiCompletionsAssertSent(array $params, int $maxTokens, float $temperature): void
-{
+function openAiCompletionsAssertSent(
+    ClientFake $client,
+    array $params,
+    int $maxTokens,
+    float $temperature
+): void {
     $prompt = sprintf(
         config('openai.system_completions_prompt'),
         $params['qtd_sentences'],
@@ -97,7 +101,7 @@ function openAiCompletionsAssertSent(array $params, int $maxTokens, float $tempe
         $params['word'],
     );
 
-    OpenAI::assertSent(
+    $client->assertSent(
         Completions::class,
         function (string $method, array $parameters) use (
             $prompt,
@@ -113,8 +117,12 @@ function openAiCompletionsAssertSent(array $params, int $maxTokens, float $tempe
     );
 }
 
-function openAiChatAssertSent(array $params, int $maxTokens, float $temperature): void
-{
+function openAiChatAssertSent(
+    ClientFake $client,
+    array $params,
+    int $maxTokens,
+    float $temperature
+): void {
     $prompt = "{$params['word']}, {$params['qtd_sentences']}, {$params['level']}";
 
     $messages = [
@@ -122,13 +130,12 @@ function openAiChatAssertSent(array $params, int $maxTokens, float $temperature)
         ['role' => 'user', 'content' => $prompt],
     ];
 
-    OpenAI::assertSent(
+    $client->assertSent(
         Chat::class,
         function (string $method, array $parameters) use (
-            $prompt,
+            $messages,
             $maxTokens,
             $temperature,
-            $messages,
         ): bool {
             return $method === 'create' &&
                 $parameters['model'] === GptModelTypes::GPT_3->value &&

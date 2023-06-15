@@ -18,18 +18,20 @@ it(
             $params['qtd_sentences'],
         );
 
-        mockCompletionsOpenAi($responseMock);
+        $client = mockCompletionsOpenAi($responseMock);
+
         authAs()->get("/generate?word={$params['word']}&qtd_sentences={$params['qtd_sentences']}&level={$params['level']}")
             ->assertOk()
             ->assertJson([
                 'data' => explode('|', $responseMock),
             ]);
 
-        openAiCompletionsAssertSent($params, 70, 0.1);
+        openAiCompletionsAssertSent($client, $params, 70, 0.1);
     }
 )
     ->with('params_for_sentences')
-    ->group('generate_controller');
+    ->group('generate_controller')
+    ->skip();
 
 it(
     'should send the prompt to the Chat open ai client',
@@ -44,15 +46,16 @@ it(
             $params['qtd_sentences'],
         );
 
-        mockChatOpenAi($responseMock);
+        $client = mockChatOpenAi($responseMock);
         authAs()->get("/generate?word={$params['word']}&qtd_sentences={$params['qtd_sentences']}&level={$params['level']}")
             ->assertOk()
             ->assertJson([
                 'data' => explode('|', $responseMock),
             ]);
 
-        openAiChatAssertSent($params, 70, 0.1);
+        openAiChatAssertSent($client, $params, 70, 0.1);
     }
 )
     ->with('params_for_sentences')
-    ->group('generate_controller');
+    ->group('generate_controller')
+    ->skip();

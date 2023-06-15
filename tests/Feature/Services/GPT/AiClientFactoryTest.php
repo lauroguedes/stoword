@@ -44,7 +44,9 @@ it('should throw exception if model do not exists', function () {
 
     config()->set('openai.model', $model);
 
-    expect(fn () => (new AiClientFactory())->factory($model))->toThrow(ValueError::class, 'Invalid model expected');
+    expect(fn () => (new AiClientFactory())
+        ->factory($model))
+        ->toThrow(ValueError::class, 'Invalid model expected');
 })->group('factories');
 
 it('should throw exception if class returned is not AiClientContract instance', function () {
@@ -52,5 +54,8 @@ it('should throw exception if class returned is not AiClientContract instance', 
 
     config()->set('openai.model', $model);
 
-    expect(fn () => (new AiClientFactory())->factory($model))->toThrow(Exception::class, 'Invalid AI Client Service');
-})->group('factories')->skip('To need to mock the GptModelTypes method');
+    expect(fn () => (new AiClientFactory())
+        ->factory($model))
+        ->toThrow(Exception::class, 'Invalid AI Client Service');
+})->group('factories')
+    ->skip('To need to mock the GptModelTypes method');
