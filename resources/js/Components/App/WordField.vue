@@ -14,30 +14,33 @@
                     <div class="flex justify-between items-center gap-3">
                         <div class="flex items-center gap-1">
                             <input
+                                id="one"
                                 type="radio"
                                 v-model="form.qtd_sentences"
                                 value="1"
                                 class="accent-indigo-400 dark:accent-indigo-600"
                             />
-                            <InputLabel>One</InputLabel>
+                            <InputLabel for="one">One</InputLabel>
                         </div>
                         <div class="flex items-center gap-1">
                             <input
+                                id="two"
                                 type="radio"
                                 v-model="form.qtd_sentences"
                                 value="2"
                                 class="accent-indigo-400 dark:accent-indigo-600"
                             />
-                            <InputLabel>Two</InputLabel>
+                            <InputLabel for="two">Two</InputLabel>
                         </div>
                         <div class="flex items-center gap-1">
                             <input
+                                id="three"
                                 type="radio"
                                 v-model="form.qtd_sentences"
                                 value="3"
                                 class="accent-indigo-400 dark:accent-indigo-600"
                             />
-                            <InputLabel>Three</InputLabel>
+                            <InputLabel for="three">Three</InputLabel>
                         </div>
                     </div>
                 </div>
@@ -53,12 +56,13 @@
                             class="flex items-center gap-1"
                         >
                             <input
+                                :id="level"
                                 type="radio"
                                 v-model="form.level"
                                 :value="level"
                                 class="accent-indigo-400 dark:accent-indigo-600"
                             />
-                            <InputLabel>{{ level }}</InputLabel>
+                            <InputLabel :for="level">{{ level }}</InputLabel>
                         </div>
                     </div>
                 </div>
