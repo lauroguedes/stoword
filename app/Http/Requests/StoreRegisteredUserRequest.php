@@ -27,7 +27,7 @@ class StoreRegisteredUserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'gpt_api_key' => 'required',
+            'gpt_api_key' => 'required|starts_with:sk-|regex:/^[a-zA-Z0-9_-]+$/|max:255',
         ];
     }
 }

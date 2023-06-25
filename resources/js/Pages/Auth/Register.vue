@@ -122,6 +122,10 @@ const submit = () => {
                         href="https://bit.ly/45IuaOd"
                         >API Key</a
                     >
+                    <div class="mt-2">Our system prioritizes the security and privacy of user
+                    data. The API key is stored in our database in an encrypted
+                    form, with robust protection measures and restricted access,
+                    ensuring the confidentiality of information.</div>
                 </p>
             </div>
 
