@@ -15,7 +15,7 @@ test('new users can register', function () {
         'email' => 'test@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',
-        'gpt_api_key' => fake()->numerify('sk_#######'),
+        'gpt_api_key' => fake()->numerify('sk-#######'),
     ])->assertRedirect(RouteServiceProvider::HOME);
 
     $this->assertAuthenticated();
