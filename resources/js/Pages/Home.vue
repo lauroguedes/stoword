@@ -55,15 +55,15 @@ defineProps({
                         >
                             <p>
                                 With just a few taps, you can
-                                <span class="highlight bg-primary"
+                                <span class="highlight decoration-primary"
                                     >generate sentences in English</span
                                 >
                                 by entering a
-                                <span class="highlight bg-primary"
+                                <span class="highlight decoration-primary"
                                     >word or phrasal verb</span
                                 >. Whether you're a student, writer, or language
                                 enthusiast, this app can help you
-                                <span class="highlight bg-primary"
+                                <span class="highlight decoration-primary"
                                     >improve your vocabulary</span
                                 >
                                 and grammar skills.
@@ -79,17 +79,17 @@ defineProps({
                             </div>
                             <p>
                                 You can choose to generate up to
-                                <span class="highlight bg-secondary"
+                                <span class="highlight decoration-secondary"
                                     >three sentences</span
                                 >
                                 and select the
-                                <span class="highlight bg-secondary"
+                                <span class="highlight decoration-secondary"
                                     >English sentence level</span
                                 >. Additionally, the app provides links for word
                                 meanings, pronunciations, and translations to
                                 assist you with your studies. With Stoword,
                                 creating
-                                <span class="highlight bg-secondary"
+                                <span class="highlight decoration-secondary"
                                     >well-crafted sentences</span
                                 >
                                 has never been easier!
