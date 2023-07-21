@@ -23,6 +23,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => bcrypt('secret'),
             'remember_token' => Str::random(10),
+            'gpt_api_key' => fake()->numerify('sk-#######'),
         ];
     }
 

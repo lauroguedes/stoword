@@ -22,9 +22,9 @@ class GenerateSentencesRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'word' => ['required', 'string', 'min:2', 'max:20'],
             'qtd_sentences' => ['required', 'integer'],
             'level' => ['required', 'string'],
-            'word' => ['required', 'string', 'min:2', 'max:20'],
         ];
     }
 

@@ -14,30 +14,33 @@
                     <div class="flex justify-between items-center gap-3">
                         <div class="flex items-center gap-1">
                             <input
+                                id="one"
                                 type="radio"
                                 v-model="form.qtd_sentences"
                                 value="1"
                                 class="accent-indigo-400 dark:accent-indigo-600"
                             />
-                            <InputLabel>One</InputLabel>
+                            <InputLabel for="one">One</InputLabel>
                         </div>
                         <div class="flex items-center gap-1">
                             <input
+                                id="two"
                                 type="radio"
                                 v-model="form.qtd_sentences"
                                 value="2"
                                 class="accent-indigo-400 dark:accent-indigo-600"
                             />
-                            <InputLabel>Two</InputLabel>
+                            <InputLabel for="two">Two</InputLabel>
                         </div>
                         <div class="flex items-center gap-1">
                             <input
+                                id="three"
                                 type="radio"
                                 v-model="form.qtd_sentences"
                                 value="3"
                                 class="accent-indigo-400 dark:accent-indigo-600"
                             />
-                            <InputLabel>Three</InputLabel>
+                            <InputLabel for="three">Three</InputLabel>
                         </div>
                     </div>
                 </div>
@@ -53,12 +56,13 @@
                             class="flex items-center gap-1"
                         >
                             <input
+                                :id="level"
                                 type="radio"
                                 v-model="form.level"
                                 :value="level"
                                 class="accent-indigo-400 dark:accent-indigo-600"
                             />
-                            <InputLabel>{{ level }}</InputLabel>
+                            <InputLabel :for="level">{{ level }}</InputLabel>
                         </div>
                     </div>
                 </div>
@@ -67,12 +71,12 @@
                 <TextInput
                     v-model="form.word"
                     type="text"
-                    placeholder="Word or Expression ..."
+                    placeholder="Word or Phrasal verb ..."
                     class="w-full h-16 text-2xl rounded-lg mr-3"
                     :disabled="loading"
                 />
                 <PrimaryButton
-                    :disabled="loading"
+                    :disabled="loading || !form.word || form.word.length > 20"
                     type="submit"
                     class="h-16 text-md rounded-lg"
                 >
@@ -83,7 +87,7 @@
         </form>
         <Loading v-if="loading" />
         <InputError class="p-2 mt-2" :message="error" />
-        <Sentences v-if="data.length" :sentences="data" />
+        <Sentences v-if="data.length" :sentences="data" :word="wordSent" />
     </div>
 </template>
 
@@ -102,12 +106,12 @@ import ExtraLinks from "./ExtraLinks.vue";
 const form = useForm({
     qtd_sentences: 1,
     level: "A1",
-    word: "pencil",
+    word: "",
 });
 
 const levelOptions = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
-const wordSent = ref(null);
+const wordSent = ref("");
 
 const { data, loading, error, getData } = useFetch();
 
@@ -115,8 +119,8 @@ const onSubmit = async () => {
     await getData(
         route("generate.sentences", {
             word: form.word,
-            level: form.level,
             qtd_sentences: form.qtd_sentences,
+            level: form.level,
         })
     );
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Profile;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -68,7 +68,7 @@ class ProfileTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->delete('/profile', [
-                'password' => 'password',
+                'password' => 'secret',
             ]);
 
         $response

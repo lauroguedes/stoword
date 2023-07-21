@@ -13,7 +13,13 @@ export function useFetch() {
             const response = await axios(...params);
             data.value = response.data.data;
         } catch (err) {
-            error.value = err.response.data.error;
+            const response = err.response.data;
+
+            if (response.errors) {
+                error.value = err.response.data.message;
+            } else {
+                error.value = err.response.data.error;
+            }
         }
         loading.value = false;
     };
