@@ -1,6 +1,5 @@
 {
     "version": 2,
-    "framework": null,
     "builds": [
         { "src": "/api/index.php", "use": "vercel-php@0.6.0" },
         { "src": "/public/**", "use": "@vercel/static" }
@@ -9,7 +8,7 @@
     "routes": [
         {
             "src": "/(css|js)/(.*)",
-            "dest": "public/$1/$2"
+            "dest": "/public/$1/$2"
         },
         {
             "src": "/(.*)",
@@ -19,7 +18,7 @@
     "env": {
         "APP_NAME": "Stoword",
         "APP_ENV": "production",
-        "APP_DEBUG": "false",
+        "APP_DEBUG": "true",
         "APP_URL": "https://stoword.vercel.app",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
