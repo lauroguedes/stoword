@@ -3,6 +3,9 @@
     "functions": {
         "api/index.php": { "runtime": "vercel-php@0.6.0" }
     },
+    "build": {
+        "command": "php artisan migrate"
+    },
     "routes": [
         {
             "src": "/build/assets/(.*)",
