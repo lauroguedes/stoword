@@ -4,6 +4,8 @@
 
 Create sentences from word for study languages, explore phrases of the words and expressions, inspiration yourself, etc. This is a open-source project that was created using [Open AI API](https://platform.openai.com/docs/api-reference).
 
+https://github.com/lauroguedes/stoword/assets/3677780/d31fd6de-d559-46db-b3e9-a12b7e56df8c
+
 ## 🚀 Features
 
 - [x] Create sentences from word or expression
