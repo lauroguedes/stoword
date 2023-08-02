@@ -2,7 +2,7 @@
     <img alt="Logo Stoword" width="300" src="https://user-images.githubusercontent.com/3677780/232802102-f19f050c-7cf5-43a2-88ec-97c396fec7a1.png">
 </p>
 
-Create sentences from word for study languages, explore phrases of the words and expressions, inspiration yourself, etc. This is a open-source project that was created using [Open AI API](https://platform.openai.com/docs/api-reference).
+Create sentences from words for study languages, explore phrases of the words and expressions, inspire yourself, etc. This is an open-source project that was created using [Open AI API](https://platform.openai.com/docs/api-reference).
 
 https://github.com/lauroguedes/stoword/assets/3677780/d31fd6de-d559-46db-b3e9-a12b7e56df8c
 
