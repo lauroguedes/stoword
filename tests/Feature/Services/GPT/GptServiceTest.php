@@ -41,5 +41,5 @@ it('should generate sentences with Chat openai client', function (array $params)
 
     $response = (new GptService($openAiAdapter))->generate($params);
 
-    expect($response)->toMatchArray(explode('|', $responseMock));
+    expect($response)->toMatchArray(json_decode($responseMock, true));
 })->with('params_for_sentences')->group('gpt_service');
