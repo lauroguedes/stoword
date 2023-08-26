@@ -148,25 +148,6 @@ function openAiChatAssertSent(
 
 function mountResponseMock(string $word, int $qtdSentences): string
 {
-    /*
-    {
-        "word": "...",
-        "word_is_correct": {
-            "is_correct": "true|false",
-            "correct_word": "..."
-        },
-        "translate": "...",
-        "mean": "...",
-        "mean_translate": "...",
-        "analogies": "...",
-        "sentences": [
-            {
-            "sentence": "...",
-            "translate": "..."
-            }
-        ]
-    }
-    */
     $sentences = [];
 
     for ($i = 0; $i < $qtdSentences; $i++) {
@@ -177,15 +158,27 @@ function mountResponseMock(string $word, int $qtdSentences): string
     }
 
     $response = [
-        'word' => $word,
-        'word_is_correct' => [
-            'is_correct' => true,
-            'correct_word' => $word,
+        'input' => [
+            'word' => $word,
+            'translate' => fake()->word(),
+            'synonyms' => fake()->word() . ', ' . fake()->word(),
+            'word_info' => [
+                'part_of_speech' => fake()->randomElement([
+                    'noun',
+                    'verb',
+                    'adjective',
+                    'adverb',
+                    'pronoun',
+                    'preposition',
+                    'conjunction',
+                    'interjection',
+                ]),
+                'irregular_verbs_list' => [fake()->word(), fake()->word()],
+                'correct_word' => fake()->word(),
+            ],
+            'mean' => fake()->sentence(4),
+            'mean_translate' => fake()->sentence(4),
         ],
-        'translate' => fake()->sentence(4),
-        'mean' => fake()->sentence(4),
-        'mean_translate' => fake()->sentence(4),
-        'analogies' => fake()->words(3),
         'sentences' => $sentences,
     ];
 

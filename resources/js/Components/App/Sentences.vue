@@ -6,11 +6,11 @@
             class="text-2xl divide-y divide-gray-300 dark:divide-gray-700 divide-dashed"
         >
             <li
-                v-for="sentence in sentencesWithHighlight"
+                v-for="item in sentences"
                 class="p-3 hover:bg-gray-300/30 dark:bg-gray-800 dark:hover:bg-gray-900/20 flex justify-between items-center"
             >
-                <span v-html="sentence"></span>
-                <ClipBoard :text="sentence" />
+                <span v-html="item?.sentence"></span>
+                <ClipBoard :text="item?.sentence" />
             </li>
         </ul>
     </div>
@@ -32,8 +32,8 @@ const props = defineProps({
 });
 
 const sentencesWithHighlight = computed(() => {
-    return props.sentences.map((sentence) => {
-        return sentence.replaceAll(
+    return props.sentences.map((item) => {
+        return item.sentence.replaceAll(
             props.word,
             `<span class="highlight decoration-secondary">${props.word}</span>`
         );

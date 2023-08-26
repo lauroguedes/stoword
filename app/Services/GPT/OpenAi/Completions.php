@@ -7,13 +7,13 @@ use App\Services\GPT\Enum\GptModelTypes;
 
 class Completions extends OpenAiClient implements AiClientContract
 {
-    public function create(): string
+    public function create(): array
     {
         $response = $this->client
             ->completions()
             ->create($this->mountParams());
 
-        return $response['choices'][0]['text'];
+        return explode('|', $response['choices'][0]['text']);
     }
 
     public function createStream(): string

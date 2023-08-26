@@ -13,12 +13,8 @@ class GptService
 
     public function generate(array $params): array
     {
-        $response = $this->gptApi
+        return $this->gptApi
             ->mountPrompt($params['word'], $params['qtd_sentences'], $params['level'])
             ->generate();
-
-        return is_array($response)
-            ? $response
-            : explode('|', $response);
     }
 }

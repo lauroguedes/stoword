@@ -7,13 +7,20 @@ use App\Services\GPT\Enum\GptModelTypes;
 
 class Chat extends OpenAiClient implements AiClientContract
 {
-    public function create(): string
+    public function create(): array
     {
         $response = $this->client
             ->chat()
             ->create($this->mountParams());
 
-        return $response->choices[0]->message->content;
+        $content = $response->choices[0]->message->content;
+
+        throw_if(
+            !str()->of($content)->isJson(),
+            new \Exception('Response json invalid')
+        );
+
+        return json_decode($content, true);
     }
 
     public function createStream(): string

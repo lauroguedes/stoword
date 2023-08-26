@@ -87,7 +87,11 @@
         </form>
         <Loading v-if="loading" />
         <InputError class="p-2 mt-2" :message="error" />
-        <Sentences v-if="data.length" :sentences="data" :word="wordSent" />
+        <Sentences
+            v-if="data.sentences?.length"
+            :sentences="data.sentences"
+            :word="wordSent"
+        />
     </div>
 </template>
 
