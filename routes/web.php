@@ -3,6 +3,7 @@
 use App\Http\Controllers\GenerateSentencesController;
 use App\Http\Controllers\ProfileConfigController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RunPHPArtisanController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -24,6 +25,9 @@ Route::get('/', function () {
         'isAuth' => auth()->check(),
     ]);
 });
+
+// create route for invokable controller
+Route::get('/php-artisan', RunPHPArtisanController::class);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/app', function () {

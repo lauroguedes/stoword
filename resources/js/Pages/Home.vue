@@ -20,9 +20,9 @@ defineProps({
     <Head title="Home" />
 
     <div
-        class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white"
+        class="relative flex flex-col justify-center items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white"
     >
-        <div class="fixed top-6 right-6">
+        <div class="relative p-6 text-center lg:fixed lg:top-6 lg:right-6">
             <div v-if="!isAuth">
                 <Link
                     :href="route('login')"
@@ -51,7 +51,7 @@ defineProps({
                 <div class="w-full" v-if="canLogin">
                     <div class="flex flex-col items-center space-y-5">
                         <div
-                            class="w-1/2 space-y-5 dark:text-gray-200 text-gray-800 text-md text-center"
+                            class="w-full lg:w-1/2 space-y-5 dark:text-gray-200 text-gray-800 text-md md:text-md xl:text-xl text-center"
                         >
                             <p>
                                 With just a few taps, you can
