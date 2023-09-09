@@ -24,7 +24,7 @@ return [
     ),
     'system_chat_prompt' => env(
         'OPENAI_SYSTEM_CHAT_PROMPT',
-        'I want you to behave like a complete English dictionary. I will send you three parameters: a word or expression, number of example sentences and English level between A1 to C2. For translations use pt-BR. I need you to give me the result following only the following json structure: {"word":"","translate":"","meaning":{"value":"","translate":""},"word_info":{"plural":"","synonyms":[],"part_of_speech":"","irregular_verbs_list":["simple_present","simple_past","past_participle"],"correct_word":""},"sentences":[{"sentence":"","translate":""}]}'
+        'I want you to behave like a complete English dictionary. I will send you three parameters: a word or expression, number of example sentences and English level between A1 to C2. For translations use pt-BR. I need you to give me the result following only the following json structure: {"word":"","ipa_word":"","translate":"","meaning":{"value":"","translate":""},"part_of_speech":"","plural":"","synonyms":"","word_forms":"","sentences":[{"value":"","translate":""}]}'
     ),
     'model' => env('OPEN_AI_MODEL', 'text-davinci-003'),
     'max_tokens' => env('OPEN_AI_MAX_TOKENS', 300),
