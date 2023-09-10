@@ -1,7 +1,7 @@
 <template>
     <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded-md shadow">
         <div
-            class="relative text-gray-600 dark:text-gray-400 font-bold text-lg mb-2"
+            class="relative text-gray-600 dark:text-gray-400 text-lg mb-2"
         >
             <div class="absolute -top-9 -right-9">
                 <span
@@ -13,19 +13,23 @@
                     {{ data.part_of_speech }}
                 </span>
             </div>
-            <h1 class="uppercase font-bold">Mean</h1>
-            <div>
-                {{ data.meaning.value }}
+            <div class="text-xl">
+                <div @click="revealTranslate = !revealTranslate" title="Translate" class="cursor-pointer hover:underline">{{ data.meaning.value }}</div>
+                <div v-if="data.meaning.translate && revealTranslate" class="opacity-70 border-t border-gray-300 dark:border-gray-700 pt-1 mt-2">
+                    {{ data.meaning.translate }}
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import {computed, ref} from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
 
 const data = computed(() => store.state.wordResponse);
+
+const revealTranslate = ref(false)
 </script>
