@@ -4,6 +4,6 @@ namespace App\Services\GPT;
 
 interface AiClientContract
 {
-    public function create(): string;
+    public function create(): array;
     public function createStream(): string;
 }

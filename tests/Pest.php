@@ -148,11 +148,39 @@ function openAiChatAssertSent(
 
 function mountResponseMock(string $word, int $qtdSentences): string
 {
-    $sentences = '';
+    $sentences = [];
 
     for ($i = 0; $i < $qtdSentences; $i++) {
-        $sentences .= fake()->sentence(4) . " {$word}|";
+        $sentences[] = [
+            'sentence' => fake()->sentence(4),
+            'translate' => fake()->sentence(4),
+        ];
     }
 
-    return str()->replaceLast('|', '', $sentences);
+    $response = [
+        'input' => [
+            'word' => $word,
+            'translate' => fake()->word(),
+            'synonyms' => fake()->word() . ', ' . fake()->word(),
+            'word_info' => [
+                'part_of_speech' => fake()->randomElement([
+                    'noun',
+                    'verb',
+                    'adjective',
+                    'adverb',
+                    'pronoun',
+                    'preposition',
+                    'conjunction',
+                    'interjection',
+                ]),
+                'irregular_verbs_list' => [fake()->word(), fake()->word()],
+                'correct_word' => fake()->word(),
+            ],
+            'mean' => fake()->sentence(4),
+            'mean_translate' => fake()->sentence(4),
+        ],
+        'sentences' => $sentences,
+    ];
+
+    return json_encode($response);
 }

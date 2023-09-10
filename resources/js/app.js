@@ -5,6 +5,20 @@ import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "./vue.m";
+import { createStore } from "vuex";
+
+const store = createStore({
+    state() {
+        return {
+            wordResponse: {},
+        };
+    },
+    mutations: {
+        setWordResponse(state, response) {
+            state.wordResponse = response;
+        },
+    },
+});
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
@@ -20,6 +34,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue, Ziggy)
+            .use(store)
             .mount(el);
     },
     progress: {

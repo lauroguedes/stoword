@@ -83,11 +83,16 @@
                     Generate
                 </PrimaryButton>
             </div>
-            <ExtraLinks v-if="data.length" :word-sent="wordSent" />
+            <ExtraLinks
+                v-if="wordResponse.word"
+                :word-sent="wordResponse.word"
+            />
         </form>
         <Loading v-if="loading" />
         <InputError class="p-2 mt-2" :message="error" />
-        <Sentences v-if="data.length" :sentences="data" :word="wordSent" />
+        <WordInfo v-if="wordResponse.word" />
+        <WordMean v-if="wordResponse.meaning?.value" />
+        <Sentences v-if="wordResponse.sentences?.length" />
     </div>
 </template>
 
@@ -100,8 +105,13 @@ import Loading from "./Loading.vue";
 import Sentences from "./Sentences.vue";
 import InputLabel from "../InputLabel.vue";
 import InputError from "../InputError.vue";
-import { ref } from "vue";
+import { computed } from "vue";
+import { useStore } from "vuex";
 import ExtraLinks from "./ExtraLinks.vue";
+import WordInfo from "./WordInfo.vue";
+import WordMean from "./WordMean.vue";
+
+const store = useStore();
 
 const form = useForm({
     qtd_sentences: 1,
@@ -111,9 +121,9 @@ const form = useForm({
 
 const levelOptions = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
-const wordSent = ref("");
+const { loading, error, getData } = useFetch();
 
-const { data, loading, error, getData } = useFetch();
+const wordResponse = computed(() => store.state.wordResponse);
 
 const onSubmit = async () => {
     await getData(
@@ -123,8 +133,6 @@ const onSubmit = async () => {
             level: form.level,
         })
     );
-
-    wordSent.value = form.word;
 
     if (!error.value) {
         form.reset();
