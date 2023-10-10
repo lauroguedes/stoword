@@ -8,6 +8,7 @@ abstract class OpenAiClient
 {
     protected mixed $client;
     protected string $prompt;
+    protected array $params;
     protected int $maxTokens;
     protected float $temperature;
 
@@ -23,6 +24,11 @@ abstract class OpenAiClient
         $this->prompt = $prompt;
     }
 
+    public function setParams(array $params): void
+    {
+        $this->params = $params;
+    }
+
     public function setMaxTokens(int $maxTokens): void
     {
         $this->maxTokens = $maxTokens;
@@ -31,6 +37,29 @@ abstract class OpenAiClient
     public function setTemperature(float $temperature): void
     {
         $this->temperature = $temperature;
+    }
+
+    public function getJsonFormat(): string
+    {
+        return json_encode([
+            "word" => "",
+            "ipa_word" => "",
+            "translate" => "",
+            "meaning" => [
+                "value" => "",
+                "translate" => ""
+            ],
+            "part_of_speech" => "",
+            "plural" => "",
+            "synonyms" => "",
+            "word_forms" => "",
+            "sentences" => [
+                [
+                    "value" => "",
+                    "translate" => ""
+                ]
+            ]
+        ]);
     }
 
     protected abstract function mountParams(): array;

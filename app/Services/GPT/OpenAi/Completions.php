@@ -23,6 +23,15 @@ class Completions extends OpenAiClient implements AiClientContract
 
     protected function mountParams(): array
     {
+        $this->prompt = sprintf(
+            config('openai.system_completions_prompt'),
+            $this->params['word'],
+            $this->params['native_language'],
+            $this->params['qtd_sentences'],
+            $this->params['level'],
+            $this->getJsonFormat()
+        );
+
         $options = [
             'model' => GptModelTypes::DAVINCI->value,
             'prompt' => $this->prompt,

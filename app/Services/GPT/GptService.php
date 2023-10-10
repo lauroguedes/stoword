@@ -7,14 +7,19 @@ use App\Services\GPT\Adapters\AdapterAiClientContract;
 class GptService
 {
     public function __construct(
-        private AdapterAiClientContract $gptApi
+        private readonly AdapterAiClientContract $gptApi
     ) {
     }
 
     public function generate(array $params): array
     {
         return $this->gptApi
-            ->mountPrompt($params['word'], $params['qtd_sentences'], $params['level'])
+            ->mountPrompt(
+                word: $params['word'],
+                native_language: $params['native_language'],
+                qtd_sentences: $params['qtd_sentences'],
+                level: $params['level']
+            )
             ->generate();
     }
 }

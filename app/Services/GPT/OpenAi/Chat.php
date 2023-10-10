@@ -4,9 +4,13 @@ namespace App\Services\GPT\OpenAi;
 
 use App\Services\GPT\AiClientContract;
 use App\Services\GPT\Enum\GptModelTypes;
+use Exception;
 
 class Chat extends OpenAiClient implements AiClientContract
 {
+    /**
+     * @throws \Throwable
+     */
     public function create(): array
     {
         $response = $this->client
@@ -17,7 +21,7 @@ class Chat extends OpenAiClient implements AiClientContract
 
         throw_if(
             !str()->of($content)->isJson(),
-            new \Exception('Response json invalid')
+            new Exception('Response json invalid')
         );
 
         return json_decode($content, true);
@@ -30,10 +34,20 @@ class Chat extends OpenAiClient implements AiClientContract
 
     protected function mountParams(): array
     {
+        $systemPrompt = sprintf(
+            config('openai.system_chat_prompt'),
+            $this->params['native_language'],
+            $this->params['qtd_sentences'],
+            $this->params['level'],
+            $this->getJsonFormat()
+        );
+
+        $this->prompt = $this->params['word'];
+
         $options = [
             'model' => GptModelTypes::GPT_3->value,
             'messages' => [
-                ['role' => 'system', 'content' => config('openai.system_chat_prompt')],
+                ['role' => 'system', 'content' => $systemPrompt],
                 ['role' => 'user', 'content' => $this->prompt],
             ],
         ];

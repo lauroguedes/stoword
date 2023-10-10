@@ -9,28 +9,13 @@ use App\Services\GPT\OpenAi\Completions;
 class OpenAiAdapter implements AdapterAiClientContract
 {
     public function __construct(
-        private Chat|Completions $openAi
+        private readonly Chat|Completions $openAi
     ) {
     }
 
-    public function mountPrompt(string $word, int $qtdSentences, string $level): static
+    public function mountPrompt(...$arguments): static
     {
-        if ($this->openAi instanceof Completions) {
-            $prompt = sprintf(
-                config('openai.system_completions_prompt'),
-                $qtdSentences,
-                $level,
-                $word,
-            );
-
-            $this->openAi->setPrompt($prompt);
-
-            return $this;
-        }
-
-        $prompt = "{$word}, {$qtdSentences}, {$level}";
-
-        $this->openAi->setPrompt($prompt);
+        $this->openAi->setParams($arguments);
 
         return $this;
     }
@@ -49,6 +34,9 @@ class OpenAiAdapter implements AdapterAiClientContract
         return $this;
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function generate(): string|array
     {
         return $this->openAi->create();
