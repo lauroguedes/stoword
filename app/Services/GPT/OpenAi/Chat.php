@@ -5,11 +5,12 @@ namespace App\Services\GPT\OpenAi;
 use App\Services\GPT\AiClientContract;
 use App\Services\GPT\Enum\GptModelTypes;
 use Exception;
+use Throwable;
 
 class Chat extends OpenAiClient implements AiClientContract
 {
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function create(): array
     {
@@ -19,12 +20,7 @@ class Chat extends OpenAiClient implements AiClientContract
 
         $content = $response->choices[0]->message->content;
 
-        throw_if(
-            !str()->of($content)->isJson(),
-            new Exception('Response json invalid')
-        );
-
-        return json_decode($content, true);
+        return $this->toArray($content);
     }
 
     public function createStream(): string

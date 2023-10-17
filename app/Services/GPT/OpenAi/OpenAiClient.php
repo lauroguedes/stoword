@@ -2,7 +2,9 @@
 
 namespace App\Services\GPT\OpenAi;
 
+use Exception;
 use OpenAI\Contracts\ClientContract;
+use Throwable;
 
 abstract class OpenAiClient
 {
@@ -60,6 +62,19 @@ abstract class OpenAiClient
                 ]
             ]
         ]);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    protected function toArray(string $content): array
+    {
+        throw_if(
+            !str()->of($content)->isJson(),
+            new Exception('Response json invalid')
+        );
+
+        return json_decode($content, true);
     }
 
     protected abstract function mountParams(): array;
