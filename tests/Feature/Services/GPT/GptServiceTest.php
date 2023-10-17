@@ -21,7 +21,23 @@ it('should generate sentences with Completions openai client', function (array $
 
     $response = (new GptService($openAiAdapter))->generate($params);
 
-    expect($response)->toMatchArray(explode('|', $responseMock));
+    expect($response)->toMatchArray(json_decode($responseMock, true));
+})
+    ->with('params_for_sentences')
+    ->group('gpt_service');
+
+it('should not generate sentences with Completion because json invalid', function (array $params) {
+    config()->set('openai.model', GptModelTypes::DAVINCI->value);
+
+    $responseMock = 'invalid json';
+
+    $client = mockCompletionsOpenAi($responseMock);
+
+    $completions = new Completions($client);
+    $openAiAdapter = new OpenAiAdapter($completions);
+
+    expect(fn () => (new GptService($openAiAdapter))->generate($params))
+        ->toThrow('Response json invalid');
 })
     ->with('params_for_sentences')
     ->group('gpt_service');

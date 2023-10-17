@@ -14,6 +14,7 @@
 use App\Models\User;
 use App\Services\GPT\Enum\GptModelTypes;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use OpenAI\Resources\Completions;
 use OpenAI\Resources\Chat;
@@ -55,7 +56,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function authAs()
+function authAs(): TestCase
 {
     $user = User::factory()->create();
 
@@ -152,35 +153,32 @@ function mountResponseMock(string $word, int $qtdSentences): string
 
     for ($i = 0; $i < $qtdSentences; $i++) {
         $sentences[] = [
-            'sentence' => fake()->sentence(4),
+            'value' => fake()->sentence(4),
             'translate' => fake()->sentence(4),
         ];
     }
 
-    $response = [
-        'input' => [
-            'word' => $word,
-            'translate' => fake()->word(),
-            'synonyms' => fake()->word() . ', ' . fake()->word(),
-            'word_info' => [
-                'part_of_speech' => fake()->randomElement([
-                    'noun',
-                    'verb',
-                    'adjective',
-                    'adverb',
-                    'pronoun',
-                    'preposition',
-                    'conjunction',
-                    'interjection',
-                ]),
-                'irregular_verbs_list' => [fake()->word(), fake()->word()],
-                'correct_word' => fake()->word(),
-            ],
-            'mean' => fake()->sentence(4),
-            'mean_translate' => fake()->sentence(4),
+    return json_encode([
+        "word" => $word,
+        "ipa_word" => fake()->word(),
+        "translate" => fake()->word(),
+        "meaning" => [
+            "value" => fake()->sentence(4),
+            "translate" => fake()->sentence(4),
         ],
-        'sentences' => $sentences,
-    ];
-
-    return json_encode($response);
+        "part_of_speech" => fake()->randomElement([
+            'noun',
+            'verb',
+            'adjective',
+            'adverb',
+            'pronoun',
+            'preposition',
+            'conjunction',
+            'interjection',
+        ]),
+        "plural" => str($word)->plural()->value(),
+        "synonyms" => fake()->word() . ', ' . fake()->word(),
+        "word_forms" => fake()->word() . ', ' . fake()->word(),
+        "sentences" => $sentences,
+    ]);
 }
