@@ -23,8 +23,6 @@ class GenerateSentencesRequest extends FormRequest
     {
         return [
             'word' => ['required', 'string', 'min:2', 'max:20'],
-            'qtd_sentences' => ['required', 'integer'],
-            'level' => ['required', 'string'],
         ];
     }
 

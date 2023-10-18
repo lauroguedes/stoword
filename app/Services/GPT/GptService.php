@@ -16,9 +16,9 @@ class GptService
         return $this->gptApi
             ->mountPrompt(
                 word: $params['word'],
-                native_language: $params['native_language'],
-                qtd_sentences: $params['qtd_sentences'],
-                level: $params['level']
+                native_language: 'pt-BR',
+                qtd_sentences: 3,
+                level: 'B2'
             )
             ->generate();
     }
