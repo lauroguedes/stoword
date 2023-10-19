@@ -13,12 +13,14 @@ class GptService
 
     public function generate(array $params): array
     {
+        $user = auth()->user();
+
         return $this->gptApi
             ->mountPrompt(
                 word: $params['word'],
-                native_language: 'pt-BR',
-                qtd_sentences: 3,
-                level: 'B2'
+                native_language: $user->setting->native_language,
+                qtd_sentences: $user->setting->qtd_sentences,
+                level: $user->setting->level,
             )
             ->generate();
     }
