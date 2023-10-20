@@ -11,13 +11,13 @@ class GptService
     ) {
     }
 
-    public function generate(array $params): array
+    public function generate(string $prompt): array
     {
         $user = auth()->user();
 
         return $this->gptApi
             ->mountPrompt(
-                word: $params['word'],
+                prompt: $prompt,
                 native_language: $user->setting->native_language,
                 qtd_sentences: $user->setting->qtd_sentences,
                 level: $user->setting->level,

@@ -31,7 +31,7 @@ class Completions extends OpenAiClient implements AiClientContract
     {
         $this->prompt = sprintf(
             config('openai.system_completions_prompt'),
-            $this->params['word'],
+            $this->params['prompt'],
             $this->params['native_language'],
             $this->params['qtd_sentences'],
             $this->params['level'],

@@ -58,7 +58,7 @@ expect()->extend('toBeOne', function () {
 
 function authAs(): TestCase
 {
-    $user = User::factory()->create();
+    $user = User::factory()->hasSetting()->create();
 
     return actingAs($user);
 }
@@ -147,11 +147,13 @@ function openAiChatAssertSent(
     );
 }
 
-function mountResponseMock(string $word, int $qtdSentences): string
+function mountResponseMock(string $prompt): string
 {
+    $user = auth()->user();
+
     $sentences = [];
 
-    for ($i = 0; $i < $qtdSentences; $i++) {
+    for ($i = 0; $i < $user->setting->qtd_sentences; $i++) {
         $sentences[] = [
             'value' => fake()->sentence(4),
             'translate' => fake()->sentence(4),
@@ -159,7 +161,7 @@ function mountResponseMock(string $word, int $qtdSentences): string
     }
 
     return json_encode([
-        "word" => $word,
+        "word" => $prompt,
         "ipa_word" => fake()->word(),
         "translate" => fake()->word(),
         "meaning" => [
@@ -176,7 +178,7 @@ function mountResponseMock(string $word, int $qtdSentences): string
             'conjunction',
             'interjection',
         ]),
-        "plural" => str($word)->plural()->value(),
+        "plural" => str($prompt)->plural()->value(),
         "synonyms" => fake()->word() . ', ' . fake()->word(),
         "word_forms" => fake()->word() . ', ' . fake()->word(),
         "sentences" => $sentences,
