@@ -6,14 +6,14 @@
         >
             <div class="flex justify-between items-center">
                 <TextInput
-                    v-model="form.word"
+                    v-model="form.prompt"
                     type="text"
                     placeholder="Word or Phrasal verb ..."
                     class="w-full h-16 text-2xl rounded-lg mr-3"
                     :disabled="loading"
                 />
                 <PrimaryButton
-                    :disabled="loading || !form.word || form.word.length > 20"
+                    :disabled="loading || !form.prompt || form.prompt.length > 20"
                     type="submit"
                     class="h-16 text-md rounded-lg"
                 >
@@ -50,7 +50,7 @@ import WordMean from "./WordMean.vue";
 const store = useStore();
 
 const form = useForm({
-    word: "",
+    prompt: "",
 });
 
 const { loading, error, getData } = useFetch();
@@ -60,7 +60,7 @@ const wordResponse = computed(() => store.state.wordResponse);
 const onSubmit = async () => {
     await getData(
         route("generate.sentences", {
-            word: form.word
+            prompt: form.prompt
         })
     );
 

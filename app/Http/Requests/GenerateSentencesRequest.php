@@ -22,7 +22,7 @@ class GenerateSentencesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'word' => ['required', 'string', 'min:2', 'max:20'],
+            'prompt' => ['required', 'string', 'min:2', 'max:20'],
         ];
     }
 

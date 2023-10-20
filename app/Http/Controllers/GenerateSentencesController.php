@@ -16,7 +16,7 @@ class GenerateSentencesController extends Controller
     {
         try {
             return response()->json([
-                'data' => $gpt->generate($request->validated())
+                'data' => $gpt->generate($request->validated()['prompt'])
             ]);
         } catch (Throwable $th) {
             return response()->json([
