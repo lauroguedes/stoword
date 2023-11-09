@@ -4,6 +4,7 @@ use App\Http\Controllers\GenerateSentencesController;
 use App\Http\Controllers\ProfileConfigController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RunPHPArtisanController;
+use App\Http\Controllers\UpdateAppSettings;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -44,6 +45,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::put('/profile/config', [ProfileConfigController::class, 'update'])->name('profile.config.update');
+
+    Route::put('/settings/update', UpdateAppSettings::class)->name('settings.update');
 });
 
 require __DIR__ . '/auth.php';

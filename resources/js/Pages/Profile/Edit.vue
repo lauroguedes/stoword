@@ -4,6 +4,7 @@ import DeleteUserForm from "./Partials/DeleteUserForm.vue";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm.vue";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm.vue";
 import UpdateProfileConfigForm from "./Partials/UpdateProfileConfigForm.vue";
+import UpdateAppSettingsForm from "./Partials/UpdateAppSettingsForm.vue";
 import { Head } from "@inertiajs/vue3";
 
 defineProps({
@@ -44,6 +45,12 @@ defineProps({
                     class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg"
                 >
                     <UpdateProfileConfigForm class="max-w-xl" />
+                </div>
+
+                <div
+                    class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg"
+                >
+                    <UpdateAppSettingsForm class="max-w-xl" />
                 </div>
 
                 <div

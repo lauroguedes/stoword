@@ -8,7 +8,7 @@
                 <TextInput
                     v-model="form.prompt"
                     type="text"
-                    placeholder="Word or Phrasal verb ..."
+                    placeholder="Type a word or an expression ..."
                     class="w-full h-16 text-2xl rounded-lg mr-3"
                     :disabled="loading"
                 />

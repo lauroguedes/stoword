@@ -48,6 +48,8 @@ class User extends Authenticatable
         'gpt_api_key' => 'encrypted',
     ];
 
+    protected $with = ['setting'];
+
     public function setting(): HasOne
     {
         return $this->hasOne(Setting::class);
