@@ -7,55 +7,50 @@ it('word field should has min 2 and max 20 characters')->todo();
 
 it(
     'should send the prompt to the Completions open ai client',
-    function (array $params) {
-
+    function () {
         config()->set('openai.model', GptModelTypes::DAVINCI->value);
         config()->set('openai.max_tokens', 70);
         config()->set('openai.temperature', 0.1);
 
-        $responseMock = mountResponseMock(
-            $params['word'],
-            $params['qtd_sentences'],
-        );
+        $prompt = 'go on';
+
+        $responseMock = mountResponseMock($prompt);
 
         $client = mockCompletionsOpenAi($responseMock);
 
-        authAs()->get("/generate?word={$params['word']}&qtd_sentences={$params['qtd_sentences']}&level={$params['level']}")
+        authAs()->get('/generate?prompt=' . $prompt)
             ->assertOk()
             ->assertJson([
-                'data' => explode('|', $responseMock),
+                'data' => $responseMock,
             ]);
 
-        openAiCompletionsAssertSent($client, $params, 70, 0.1);
+        openAiCompletionsAssertSent($client, $prompt, 70, 0.1);
     }
 )
-    ->with('params_for_sentences')
     ->group('generate_controller')
-    ->skip();
+    ->skip('should create a facade to GptService to can mock it');
 
 it(
     'should send the prompt to the Chat open ai client',
-    function (array $params) {
-
+    function () {
         config()->set('openai.model', GptModelTypes::GPT_3->value);
         config()->set('openai.max_tokens', 70);
         config()->set('openai.temperature', 0.1);
 
-        $responseMock = mountResponseMock(
-            $params['word'],
-            $params['qtd_sentences'],
-        );
+        $prompt = 'go on';
+
+        $responseMock = mountResponseMock($prompt);
 
         $client = mockChatOpenAi($responseMock);
-        authAs()->get("/generate?word={$params['word']}&qtd_sentences={$params['qtd_sentences']}&level={$params['level']}")
+
+        authAs()->get('/generate?prompt=' . $prompt)
             ->assertOk()
             ->assertJson([
-                'data' => explode('|', $responseMock),
+                'data' => $responseMock,
             ]);
 
-        openAiChatAssertSent($client, $params, 70, 0.1);
+        openAiChatAssertSent($client, $prompt, 70, 0.1);
     }
 )
-    ->with('params_for_sentences')
     ->group('generate_controller')
-    ->skip();
+    ->skip('should create a facade to GptService to can mock it');

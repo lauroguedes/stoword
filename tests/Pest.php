@@ -56,9 +56,32 @@ expect()->extend('toBeOne', function () {
 |
 */
 
+function getJsonFormat(): string
+{
+    return json_encode([
+        "word" => "",
+        "ipa_word" => "",
+        "translate" => "",
+        "meaning" => [
+            "value" => "",
+            "translate" => ""
+        ],
+        "part_of_speech" => "",
+        "plural" => "",
+        "synonyms" => "",
+        "word_forms" => "",
+        "sentences" => [
+            [
+                "value" => "",
+                "translate" => ""
+            ]
+        ]
+    ]);
+}
+
 function authAs(): TestCase
 {
-    $user = User::factory()->create();
+    $user = User::factory()->hasSetting()->create();
 
     return actingAs($user);
 }
@@ -91,27 +114,31 @@ function mockCompletionsOpenAi(string $response = 'awesome!'): ClientFake
 
 function openAiCompletionsAssertSent(
     ClientFake $client,
-    array $params,
+    string $prompt,
     int $maxTokens,
     float $temperature
 ): void {
-    $prompt = sprintf(
+    $user = auth()->user();
+
+    $content = sprintf(
         config('openai.system_completions_prompt'),
-        $params['qtd_sentences'],
-        $params['level'],
-        $params['word'],
+        $prompt,
+        $user->setting->native_language,
+        $user->setting->qtd_sentences,
+        $user->setting->level,
+        getJsonFormat()
     );
 
     $client->assertSent(
         Completions::class,
         function (string $method, array $parameters) use (
-            $prompt,
+            $content,
             $maxTokens,
             $temperature
         ): bool {
             return $method === 'create' &&
                 $parameters['model'] === GptModelTypes::DAVINCI->value &&
-                $parameters['prompt'] === $prompt &&
+                $parameters['prompt'] === $content &&
                 $parameters['max_tokens'] === $maxTokens &&
                 $parameters['temperature'] === $temperature;
         }
@@ -120,14 +147,22 @@ function openAiCompletionsAssertSent(
 
 function openAiChatAssertSent(
     ClientFake $client,
-    array $params,
+    string $prompt,
     int $maxTokens,
     float $temperature
 ): void {
-    $prompt = "{$params['word']}, {$params['qtd_sentences']}, {$params['level']}";
+    $user = auth()->user();
+
+    $systemContent = sprintf(
+        config('openai.system_chat_prompt'),
+        $user->setting->native_language,
+        $user->setting->qtd_sentences,
+        $user->setting->level,
+        getJsonFormat()
+    );
 
     $messages = [
-        ['role' => 'system', 'content' => config('openai.system_chat_prompt')],
+        ['role' => 'system', 'content' => $systemContent],
         ['role' => 'user', 'content' => $prompt],
     ];
 
@@ -147,11 +182,13 @@ function openAiChatAssertSent(
     );
 }
 
-function mountResponseMock(string $word, int $qtdSentences): string
+function mountResponseMock(string $prompt): string
 {
+    $user = auth()->user();
+
     $sentences = [];
 
-    for ($i = 0; $i < $qtdSentences; $i++) {
+    for ($i = 0; $i < $user->setting->qtd_sentences; $i++) {
         $sentences[] = [
             'value' => fake()->sentence(4),
             'translate' => fake()->sentence(4),
@@ -159,7 +196,7 @@ function mountResponseMock(string $word, int $qtdSentences): string
     }
 
     return json_encode([
-        "word" => $word,
+        "word" => $prompt,
         "ipa_word" => fake()->word(),
         "translate" => fake()->word(),
         "meaning" => [
@@ -176,7 +213,7 @@ function mountResponseMock(string $word, int $qtdSentences): string
             'conjunction',
             'interjection',
         ]),
-        "plural" => str($word)->plural()->value(),
+        "plural" => str($prompt)->plural()->value(),
         "synonyms" => fake()->word() . ', ' . fake()->word(),
         "word_forms" => fake()->word() . ', ' . fake()->word(),
         "sentences" => $sentences,

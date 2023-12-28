@@ -6,74 +6,62 @@ use App\Services\GPT\GptService;
 use App\Services\GPT\OpenAi\Chat;
 use App\Services\GPT\OpenAi\Completions;
 
-it('should generate sentences with Completions openai client', function (array $params) {
-    config()->set('openai.model', GptModelTypes::DAVINCI->value);
+beforeEach(function () {
+    authAs();
 
-    $responseMock = mountResponseMock(
-        $params['word'],
-        $params['qtd_sentences'],
-    );
+    $this->prompt = 'word';
+});
 
+function completionAdapter($responseMock): OpenAiAdapter
+{
     $client = mockCompletionsOpenAi($responseMock);
 
     $completions = new Completions($client);
-    $openAiAdapter = new OpenAiAdapter($completions);
+    return new OpenAiAdapter($completions);
+}
 
-    $response = (new GptService($openAiAdapter))->generate($params);
+function chatAdapter($responseMock): OpenAiAdapter
+{
+    $client = mockChatOpenAi($responseMock);
+
+    $chat = new Chat($client);
+    return new OpenAiAdapter($chat);
+}
+
+it('should generate sentences with Completions openai client', function () {
+    config()->set('openai.model', GptModelTypes::DAVINCI->value);
+
+    $responseMock = mountResponseMock($this->prompt);
+
+    $response = (new GptService(completionAdapter($responseMock)))->generate($this->prompt);
 
     expect($response)->toMatchArray(json_decode($responseMock, true));
-})
-    ->with('params_for_sentences')
-    ->group('gpt_service');
+});
 
-it('should not generate sentences with Completion because json invalid', function (array $params) {
+it('should not generate sentences with Completion because json invalid', function () {
     config()->set('openai.model', GptModelTypes::DAVINCI->value);
 
     $responseMock = 'invalid json';
 
-    $client = mockCompletionsOpenAi($responseMock);
-
-    $completions = new Completions($client);
-    $openAiAdapter = new OpenAiAdapter($completions);
-
-    expect(fn () => (new GptService($openAiAdapter))->generate($params))
+    expect(fn () => (new GptService(completionAdapter($responseMock)))->generate($this->prompt))
         ->toThrow('Response json invalid');
-})
-    ->with('params_for_sentences')
-    ->group('gpt_service');
+});
 
-it('should generate sentences with Chat openai client', function (array $params) {
+it('should generate sentences with Chat openai client', function () {
     config()->set('openai.model', GptModelTypes::GPT_3->value);
 
-    $responseMock = mountResponseMock(
-        $params['word'],
-        $params['qtd_sentences'],
-    );
+    $responseMock = mountResponseMock($this->prompt);
 
-    $client = mockChatOpenAi($responseMock);
-
-    $chat = new Chat($client);
-    $openAiAdapter = new OpenAiAdapter($chat);
-
-    $response = (new GptService($openAiAdapter))->generate($params);
+    $response = (new GptService(chatAdapter($responseMock)))->generate($this->prompt);
 
     expect($response)->toMatchArray(json_decode($responseMock, true));
-})
-    ->with('params_for_sentences')
-    ->group('gpt_service');
+});
 
-it('should not generate sentences with Chat because json invalid', function (array $params) {
+it('should not generate sentences with Chat because json invalid', function () {
     config()->set('openai.model', GptModelTypes::GPT_3->value);
 
     $responseMock = 'invalid json';
 
-    $client = mockChatOpenAi($responseMock);
-
-    $chat = new Chat($client);
-    $openAiAdapter = new OpenAiAdapter($chat);
-
-    expect(fn () => (new GptService($openAiAdapter))->generate($params))
+    expect(fn () => (new GptService(chatAdapter($responseMock)))->generate($this->prompt))
         ->toThrow('Response json invalid');
-})
-    ->with('params_for_sentences')
-    ->group('gpt_service');
+});

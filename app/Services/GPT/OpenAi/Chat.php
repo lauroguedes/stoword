@@ -38,7 +38,7 @@ class Chat extends OpenAiClient implements AiClientContract
             $this->getJsonFormat()
         );
 
-        $this->prompt = $this->params['word'];
+        $this->prompt = $this->params['prompt'];
 
         $options = [
             'model' => GptModelTypes::GPT_3->value,
