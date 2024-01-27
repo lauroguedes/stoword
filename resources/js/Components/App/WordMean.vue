@@ -14,9 +14,12 @@
                 </span>
             </div>
             <div class="text-xl">
-                <div @click="revealTranslate = !revealTranslate" title="Translate" class="cursor-pointer hover:underline">{{ data.meaning.value }}</div>
-                <div v-if="data.meaning.translate && revealTranslate" class="opacity-70 border-t border-gray-300 dark:border-gray-700 pt-1 mt-2">
-                    {{ data.meaning.translate }}
+                <div>
+                    <span>{{ data.meaning.value }}</span>
+                    <div class="flex space-x-2">
+                        <ClipBoard :text="data.meaning.value" />
+                        <RevealsTranslation design="opacity-70 mt-2" :text="data.meaning.translate" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -26,6 +29,8 @@
 <script setup>
 import {computed, ref} from "vue";
 import { useStore } from "vuex";
+import RevealsTranslation from "@/Components/App/RevealsTranslation.vue";
+import ClipBoard from "@/Components/App/ClipBoard.vue";
 
 const store = useStore();
 
