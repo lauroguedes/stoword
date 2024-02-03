@@ -11,6 +11,7 @@
             >
                 <span v-html="sentence?.value"></span>
                 <ClipBoard :text="sentence?.value" />
+                <RevealsTranslation :text="sentence?.translate" />
             </li>
         </ul>
     </div>
@@ -19,6 +20,7 @@
 <script setup>
 import { computed } from "vue";
 import ClipBoard from "./ClipBoard.vue";
+import RevealsTranslation from "@/Components/App/RevealsTranslation.vue";
 import { useStore } from "vuex";
 
 const store = useStore();

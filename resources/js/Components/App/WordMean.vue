@@ -14,11 +14,11 @@
                 </span>
             </div>
             <div class="text-xl">
-                <div>
-                    <span>{{ data.meaning.value }}</span>
-                    <div class="flex space-x-2">
+                <div class="flex flex-col w-full">
+                    <div>{{ data.meaning.value }}</div>
+                    <div class="flex space-x-2 w-full justify-end">
                         <ClipBoard :text="data.meaning.value" />
-                        <RevealsTranslation design="opacity-70 mt-2" :text="data.meaning.translate" />
+                        <RevealsTranslation :text="data.meaning.translate" />
                     </div>
                 </div>
             </div>

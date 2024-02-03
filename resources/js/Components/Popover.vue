@@ -1,11 +1,37 @@
-<script setup>
-
-</script>
-
 <template>
-  $END$
+    <div class="popover-container">
+        <Popper arrow placement="top">
+            <button class="btn">
+                <slot></slot>
+            </button>
+            <template #content>
+                <div class="popover-content">{{ content }}</div>
+            </template>
+        </Popper>
+    </div>
 </template>
 
-<style scoped>
+<script setup>
+import Popper from "vue3-popper";
 
+const props = defineProps({
+    content: {
+        type: String,
+        default: 'content...',
+    },
+});
+</script>
+
+<style scoped>
+.btn {
+    @apply p-1 disabled:bg-transparent bg-gray-300 hover:bg-gray-300/80 active:bg-gray-300/50 dark:bg-gray-700 dark:active:bg-gray-700/50 dark:hover:bg-gray-700/80 shadow-sm rounded-md
+}
+
+.popover-container {
+    @apply relative;
+}
+
+.popover-content {
+    @apply bg-gray-500 w-max text-gray-200 text-xl p-2 border border-gray-400 rounded;
+}
 </style>
