@@ -13,6 +13,6 @@
 
 <style scoped>
     .title {
-        @apply absolute -top-9 -left-7 rounded-full p-1.5 uppercase bg-sky-500 text-sky-100 font-bold text-xs shadow
+        @apply rounded-full p-1.5 uppercase font-bold text-xs shadow
     }
 </style>

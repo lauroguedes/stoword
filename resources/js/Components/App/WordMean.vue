@@ -14,7 +14,7 @@
                 </span>
             </div>
             <div class="text-xl relative">
-                <BoxTitle text="meaning" />
+                <BoxTitle class="absolute -top-9 -left-7 bg-sky-500 text-sky-100" text="meaning" />
                 <div class="flex justify-between items-center">
                     <div>{{ data.meaning.value }}</div>
                     <ActionsBtn :translation="data.meaning.translate" :text="data.meaning.value" />

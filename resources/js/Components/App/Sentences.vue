@@ -1,8 +1,8 @@
 <template>
     <div
-        class="mt-5 p-3 shadow bg-gray-200 dark:bg-gray-800 rounded-md text-gray-600 dark:text-gray-400"
+        class="relative mt-5 p-3 shadow bg-gray-200 dark:bg-gray-800 rounded-md text-gray-600 dark:text-gray-400"
     >
-        <BoxTitle text="sentences" />
+        <BoxTitle class="absolute -top-3 -left-3 bg-amber-500 text-amber-100" text="sentences" />
         <ul
             class="text-xl divide-y divide-gray-300 dark:divide-gray-700 divide-dashed"
         >
