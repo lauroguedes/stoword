@@ -1,6 +1,6 @@
 <template>
     <div class="popover-container">
-        <Popper arrow placement="top">
+        <Popper arrow placement="top" class="p-0">
             <button class="btn">
                 <slot></slot>
             </button>
@@ -32,6 +32,6 @@ const props = defineProps({
 }
 
 .popover-content {
-    @apply bg-gray-500 w-max text-gray-200 text-xl p-2 border border-gray-400 rounded;
+    @apply bg-gray-500 w-max text-gray-200 text-base p-2 border border-gray-400 rounded;
 }
 </style>

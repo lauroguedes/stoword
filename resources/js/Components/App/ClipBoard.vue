@@ -3,7 +3,7 @@
         title="Copy"
         :disabled="wasCopied"
         @click="copyElement"
-        class="p-1 disabled:bg-transparent bg-gray-300 hover:bg-gray-300/80 active:bg-gray-300/50 dark:bg-gray-700 dark:active:bg-gray-700/50 dark:hover:bg-gray-700/80 shadow-sm rounded-md"
+        class="btn"
     >
         <Copy v-if="!wasCopied" />
         <Check v-else />
@@ -36,3 +36,9 @@ const copyElement = () => {
     }, 2000);
 };
 </script>
+
+<style scoped>
+.btn {
+    @apply p-1 disabled:bg-transparent bg-gray-300 hover:bg-gray-300/80 active:bg-gray-300/50 dark:bg-gray-700 dark:active:bg-gray-700/50 dark:hover:bg-gray-700/80 shadow-sm rounded-md
+}
+</style>
