@@ -7,7 +7,7 @@
             <template #content>
                 <div class="popover-content">
                     <span>{{ content }}</span>
-                    <ClipBoard :text="content" />
+                    <ClipBoard class="self-center" :text="content" />
                 </div>
             </template>
         </Popper>
@@ -36,6 +36,6 @@ const props = defineProps({
 }
 
 .popover-content {
-    @apply flex space-x-1 bg-gray-500 w-max text-gray-200 text-base p-2 border border-gray-400 rounded;
+    @apply flex space-x-1 bg-gray-500 w-max max-w-lg text-gray-200 text-base p-2 border border-gray-400 rounded;
 }
 </style>

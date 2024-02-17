@@ -23,6 +23,7 @@
             <ExtraLinks
                 v-if="wordResponse.word"
                 :word-sent="wordResponse.word"
+                :native-lang="wordResponse.native_language"
             />
         </form>
         <Loading v-if="loading" />
