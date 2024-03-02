@@ -17,12 +17,13 @@
                     type="submit"
                     class="h-16 text-md rounded-lg"
                 >
-                    Send
+                    <PaperAirplane />
                 </PrimaryButton>
             </div>
             <ExtraLinks
                 v-if="wordResponse.word"
                 :word-sent="wordResponse.word"
+                :native-lang="wordResponse.native_language"
             />
         </form>
         <Loading v-if="loading" />
@@ -46,6 +47,7 @@ import { useStore } from "vuex";
 import ExtraLinks from "./ExtraLinks.vue";
 import WordInfo from "./WordInfo.vue";
 import WordMean from "./WordMean.vue";
+import PaperAirplane from "@/Components/Icons/PaperAirplane.vue";
 
 const store = useStore();
 

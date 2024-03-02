@@ -15,7 +15,7 @@ class GptService
     {
         $user = auth()->user();
 
-        return $this->gptApi
+        $data =  $this->gptApi
             ->mountPrompt(
                 prompt: $prompt,
                 native_language: $user->setting->native_language,
@@ -23,5 +23,11 @@ class GptService
                 level: $user->setting->level,
             )
             ->generate();
+
+        if (is_array($data)) {
+            $data['native_language'] = $user->setting->native_language;
+        }
+
+        return $data;
     }
 }

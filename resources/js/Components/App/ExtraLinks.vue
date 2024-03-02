@@ -3,7 +3,7 @@
         class="mt-4 pt-2 text-right border-t border-gray-300 dark:border-gray-700 space-x-5"
     >
         <a
-            :href="`https://tenor.com/search/${wordSent}-gifs/`"
+            :href="`https://giphy.com/search/${wordSent}`"
             target="_blank"
             class="text-gray-500 dark:text-gray-400 hover:opacity-80 hover:underline"
             ><Gif class="mr-2 inline" />Image</a
@@ -22,7 +22,7 @@
             ><SpeakerWave class="mr-2 inline" />Pronunciation</a
         >
         <a
-            :href="`https://translate.google.com/?sl=en&tl=pt&text=${wordSent}&op=translate`"
+            :href="`https://translate.google.com/?sl=en&tl=${nativeLang}&text=${wordSent}&op=translate`"
             target="_blank"
             class="text-gray-500 dark:text-gray-400 hover:opacity-80 hover:underline"
             ><Language class="mr-2 inline" />Translate</a
@@ -38,6 +38,10 @@ import Gif from "../Icons/Gif.vue";
 
 const props = defineProps({
     wordSent: {
+        type: String,
+        required: true,
+    },
+    nativeLang: {
         type: String,
         required: true,
     },
