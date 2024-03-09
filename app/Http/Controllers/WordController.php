@@ -34,6 +34,6 @@ class WordController extends Controller
     {
         $word->delete();
 
-        return response()->json();
+        return response()->noContent();
     }
 }
