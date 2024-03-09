@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Word extends Model
+{
+    use SoftDeletes, HasFactory;
+
+    protected $fillable = [
+        'name',
+        'ipa',
+        'translate',
+        'meaning',
+        'part_of_speech',
+        'plural',
+        'synonyms',
+        'forms',
+        'sentences',
+    ];
+
+    protected $casts = [
+        'meaning' => 'array',
+        'sentences' => 'array',
+    ];
+}
