@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Actions\SaveWordAndAttachUserController;
+use App\Http\Controllers\WordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,5 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('words', \App\Http\Controllers\WordController::class)
+Route::middleware('auth:sanctum')
+    ->post('words/save', SaveWordAndAttachUserController::class);
+
+Route::apiResource('words', WordController::class)
     ->middleware('auth:sanctum');

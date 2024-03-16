@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\User;
 use App\Models\Word;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\post;
 
 uses(RefreshDatabase::class);

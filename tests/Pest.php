@@ -41,10 +41,6 @@ uses(
 |
 */
 
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
-
 /*
 |--------------------------------------------------------------------------
 | Functions
@@ -79,9 +75,13 @@ function getJsonFormat(): string
     ]);
 }
 
-function authAs(): TestCase
+function authAs(?User $user = null): TestCase
 {
-    $user = User::factory()->hasSetting()->create();
+    if (!$user) {
+        $user = User::factory()->hasSetting()->create();
+
+        return actingAs($user);
+    }
 
     return actingAs($user);
 }

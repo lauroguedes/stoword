@@ -18,7 +18,7 @@ class WordFactory extends Factory
             'name' => $this->faker->word(),
             'ipa' => $this->faker->word(),
             'translate' => $this->faker->word(),
-            'meaning' => $this->faker->sentence(),
+            'meaning' => $this->faker->sentences(1),
             'part_of_speech' => $this->faker->word(),
             'plural' => $this->faker->word(),
             'synonyms' => $this->faker->words(2, true),

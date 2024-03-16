@@ -11,8 +11,13 @@ class WordRequest extends FormRequest
         return [
             'name' => ['required'],
             'translate' => ['required'],
-            'meaning' => ['required'],
-            'sentences' => ['required'],
+            'meaning' => ['required', 'array'],
+            'sentences' => ['required', 'array'],
+            'part_of_speech' => ['nullable'],
+            'ipa' => ['nullable'],
+            'plural' => ['nullable'],
+            'synonyms' => ['nullable'],
+            'forms' => ['nullable'],
         ];
     }
 
