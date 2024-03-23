@@ -2,6 +2,7 @@
 
 namespace App\Services\GPT;
 
+use App\Jobs\SaveWordAndCreateHistoricJob;
 use App\Services\GPT\Adapters\AdapterAiClientContract;
 
 class GptService
@@ -23,6 +24,8 @@ class GptService
                 level: $user->setting->level,
             )
             ->generate();
+
+        SaveWordAndCreateHistoricJob::dispatch($data, $user);
 
         if (is_array($data)) {
             $data['native_language'] = $user->setting->native_language;
