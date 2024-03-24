@@ -2,6 +2,7 @@
 
 namespace App\Services\GPT\OpenAi;
 
+use App\Services\DTOs\WordDto;
 use Exception;
 use OpenAI\Contracts\ClientContract;
 use Throwable;
@@ -76,25 +77,7 @@ abstract class OpenAiClient
 
         $content = json_decode($content, true);
 
-        return $this->dtoData($content);
-    }
-
-    private function dtoData(array $data): array
-    {
-        return [
-            "name" => $data['word'] ?: null,
-            "ipa" => $data['ipa_word'] ?: null,
-            "translate" => $data['translate'] ?: null,
-            "meaning" => [
-                "value" => $data['meaning']['value'] ?: null,
-                "translate" => $data['meaning']['translate'] ?: null
-            ],
-            "part_of_speech" => $data['part_of_speech'] ?: null,
-            "plural" => $data['plural'] ?: null,
-            "synonyms" => $data['synonyms'] ?: null,
-            "forms" => $data['word_forms'] ?: null,
-            "sentences" => $data['sentences'] ?: null
-        ];
+        return WordDto::fromArray($content)->toArray();
     }
 
     protected abstract function mountParams(): array;

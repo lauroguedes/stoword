@@ -35,7 +35,9 @@ it('should generate sentences with Completions openai client', function () {
 
     $response = (new GptService(completionAdapter($responseMock)))->generate($this->prompt);
 
-    expect($response)->toMatchArray(json_decode($responseMock, true));
+    $expectedData = \App\Services\DTOs\WordDto::fromArray(json_decode($responseMock, true));
+
+    expect($response)->toMatchArray($expectedData->toArray());
 });
 
 it('should not generate sentences with Completion because json invalid', function () {
@@ -54,7 +56,9 @@ it('should generate sentences with Chat openai client', function () {
 
     $response = (new GptService(chatAdapter($responseMock)))->generate($this->prompt);
 
-    expect($response)->toMatchArray(json_decode($responseMock, true));
+    $expectedData = \App\Services\DTOs\WordDto::fromArray(json_decode($responseMock, true));
+
+    expect($response)->toMatchArray($expectedData->toArray());
 });
 
 it('should not generate sentences with Chat because json invalid', function () {

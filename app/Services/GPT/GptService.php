@@ -25,7 +25,7 @@ class GptService
             )
             ->generate();
 
-        SaveWordAndCreateHistoricJob::dispatch($data, $user);
+        //SaveWordAndCreateHistoricJob::dispatch($data, $user);
 
         if (is_array($data)) {
             $data['native_language'] = $user->setting->native_language;
