@@ -28,7 +28,7 @@ uses(
     Tests\TestCase::class,
     RefreshDatabase::class,
     WithFaker::class,
-)->in('Feature');
+)->in('Feature', 'Unit');
 
 /*
 |--------------------------------------------------------------------------

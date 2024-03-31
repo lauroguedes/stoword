@@ -57,3 +57,22 @@ test('should return word data from array response to array', function () {
         'forms' => $this->responseGpt['word_forms']
     ]);
 });
+
+test('should return word data from json response', function () {
+    $wordDto = \App\Services\DTOs\WordDto::fromJson(json_encode($this->responseGpt));
+
+    expect($wordDto->name)->toBe($this->responseGpt['word'])
+        ->and($wordDto->translate)->toBe($this->responseGpt['translate'])
+        ->and($wordDto->meaning)->toBe($this->responseGpt['meaning'])
+        ->and($wordDto->sentences)->toBe($this->responseGpt['sentences'])
+        ->and($wordDto->part_of_speech)->toBe($this->responseGpt['part_of_speech'])
+        ->and($wordDto->ipa)->toBe($this->responseGpt['ipa_word'])
+        ->and($wordDto->plural)->toBe($this->responseGpt['plural'])
+        ->and($wordDto->synonyms)->toBe($this->responseGpt['synonyms'])
+        ->and($wordDto->forms)->toBe($this->responseGpt['word_forms']);
+});
+
+test('should not return word data from invalid json response', function () {
+    expect(fn () => \App\Services\DTOs\WordDto::fromJson('invalid json'))
+        ->toThrow('String json invalid');
+});

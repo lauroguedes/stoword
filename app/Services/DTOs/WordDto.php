@@ -2,6 +2,8 @@
 
 namespace App\Services\DTOs;
 
+use Throwable;
+
 class WordDto
 {
     public function __construct(
@@ -30,6 +32,19 @@ class WordDto
             $data['synonyms'] ?: null,
             $data['word_forms'] ?: null,
         );
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public static function fromJson(string $json): self
+    {
+        throw_if(
+            !str()->of($json)->isJson(),
+            new \Exception('String json invalid')
+        );
+
+        return self::fromArray(json_decode($json, true));
     }
 
     public function toArray(): array

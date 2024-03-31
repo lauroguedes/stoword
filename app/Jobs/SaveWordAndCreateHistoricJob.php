@@ -14,21 +14,22 @@ class SaveWordAndCreateHistoricJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(private readonly Word $word)
-    {
-    }
+    public function __construct(
+        public array $data,
+        public User $user,
+    ) {}
 
-    public function handle(array $wordData, User $user): void
+    public function handle(Word $word): void
     {
-        $word = $this->word->createOrFirst(
-            ['name' => $wordData['name']],
-           $wordData
+        $word = $word->firstOrCreate(
+            ['name' => $this->data['name']],
+           $this->data
         );
 
-        if ($word->users->contains($user->id)){
+        if ($word->users->contains($this->user->id)){
             return;
         }
 
-        $word->users()->attach($user->id);
+        $word->users()->attach($this->user->id);
     }
 }
