@@ -61,6 +61,33 @@ test('list words', function () {
     $response->assertJsonCount(3, 'data');
 });
 
+test('list history words', function () {
+    $user = User::factory()->hasWords(10)->create();
+
+    $response = actingAs($user)->get('/api/words/history')->assertOk();
+
+    $response->assertJsonStructure([
+        'data' => [
+            '*' => [
+                'created_at',
+                'updated_at',
+                'id',
+                'name',
+                'ipa',
+                'translate',
+                'meaning',
+                'part_of_speech',
+                'plural',
+                'synonyms',
+                'forms',
+                'sentences',
+            ],
+        ],
+    ]);
+
+    $response->assertJsonCount(6, 'data');
+});
+
 test('store word', function () {
     $response = authAs()->post('/api/words', $this->word)->assertCreated();
 

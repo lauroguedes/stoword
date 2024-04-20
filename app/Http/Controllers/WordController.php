@@ -13,6 +13,16 @@ class WordController extends Controller
         return WordResource::collection(Word::all());
     }
 
+    public function history()
+    {
+        $user = auth()->user();
+        $words = $user->words
+            ->take(6)
+            ->sortByDesc('pivot.created_at');
+
+        return WordResource::collection($words);
+    }
+
     public function store(WordRequest $request)
     {
         return new WordResource(Word::create($request->validated()));
