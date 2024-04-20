@@ -28,7 +28,7 @@ uses(
     Tests\TestCase::class,
     RefreshDatabase::class,
     WithFaker::class,
-)->in('Feature');
+)->in('Feature', 'Unit');
 
 /*
 |--------------------------------------------------------------------------
@@ -182,13 +182,19 @@ function openAiChatAssertSent(
     );
 }
 
-function mountResponseMock(string $prompt): string
+function mountResponseMock(string $prompt, bool $useUser = true): string
 {
-    $user = auth()->user();
+    $qtdSentences = 3;
+
+    if ($useUser) {
+        $user = auth()->user();
+
+        $qtdSentences = $user->setting->qtd_sentences;
+    }
 
     $sentences = [];
 
-    for ($i = 0; $i < $user->setting->qtd_sentences; $i++) {
+    for ($i = 0; $i < $qtdSentences; $i++) {
         $sentences[] = [
             'value' => fake()->sentence(4),
             'translate' => fake()->sentence(4),

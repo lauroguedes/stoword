@@ -21,14 +21,14 @@
                 </PrimaryButton>
             </div>
             <ExtraLinks
-                v-if="wordResponse.word"
-                :word-sent="wordResponse.word"
+                v-if="wordResponse.name"
+                :word-sent="wordResponse.name"
                 :native-lang="wordResponse.native_language"
             />
         </form>
         <Loading v-if="loading" />
         <InputError class="p-2 mt-2" :message="error" />
-        <WordInfo v-if="wordResponse.word" />
+        <WordInfo v-if="wordResponse.name" />
         <WordMean v-if="wordResponse.meaning?.value" />
         <Sentences v-if="wordResponse.sentences?.length" />
     </div>

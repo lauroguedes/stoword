@@ -2,6 +2,7 @@
 
 namespace App\Services\GPT\OpenAi;
 
+use App\Services\DTOs\WordDto;
 use Exception;
 use OpenAI\Contracts\ClientContract;
 use Throwable;
@@ -74,7 +75,9 @@ abstract class OpenAiClient
             new Exception('Response json invalid')
         );
 
-        return json_decode($content, true);
+        $content = json_decode($content, true);
+
+        return WordDto::fromArray($content)->toArray();
     }
 
     protected abstract function mountParams(): array;

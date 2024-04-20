@@ -1,5 +1,8 @@
 <?php
 
+use App\Jobs\SaveWordAndCreateHistoricJob;
+use App\Models\Word;
+use App\Services\DTOs\WordDto;
 use App\Services\GPT\Adapters\OpenAiAdapter;
 use App\Services\GPT\Enum\GptModelTypes;
 use App\Services\GPT\GptService;
@@ -12,56 +15,159 @@ beforeEach(function () {
     $this->prompt = 'word';
 });
 
-function completionAdapter($responseMock): OpenAiAdapter
+function getGptAdapter($responseMock, $model): array
+{
+    return match ($model) {
+        GptModelTypes::DAVINCI->value => completionAdapter($responseMock),
+        GptModelTypes::GPT_3->value => chatAdapter($responseMock),
+    };
+}
+
+function completionAdapter($responseMock): array
 {
     $client = mockCompletionsOpenAi($responseMock);
 
     $completions = new Completions($client);
-    return new OpenAiAdapter($completions);
+
+    return [
+        'adapter' => new OpenAiAdapter($completions),
+        'mock' => $client->completions(),
+    ];
 }
 
-function chatAdapter($responseMock): OpenAiAdapter
+function chatAdapter($responseMock): array
 {
     $client = mockChatOpenAi($responseMock);
 
     $chat = new Chat($client);
-    return new OpenAiAdapter($chat);
+
+    return [
+        'adapter' => new OpenAiAdapter($chat),
+        'mock' => $client->chat(),
+    ];
 }
 
-it('should generate sentences with Completions openai client', function () {
-    config()->set('openai.model', GptModelTypes::DAVINCI->value);
+it('should generate word data straight from api request', function (string $model) {
+    Queue::fake();
+
+    config()->set('openai.model', $model);
 
     $responseMock = mountResponseMock($this->prompt);
 
-    $response = (new GptService(completionAdapter($responseMock)))->generate($this->prompt);
+    $gpt = getGptAdapter($responseMock, $model);
 
-    expect($response)->toMatchArray(json_decode($responseMock, true));
-});
+    $response = (new GptService($gpt['adapter']))->generate($this->prompt);
 
-it('should not generate sentences with Completion because json invalid', function () {
-    config()->set('openai.model', GptModelTypes::DAVINCI->value);
+    $gpt['mock']->assertSent();
+
+    Queue::assertPushed(SaveWordAndCreateHistoricJob::class, function ($job) {
+        return $job->data['name'] === $this->prompt;
+    });
+
+    $expectedData = WordDto::fromJson($responseMock)->toArray();
+
+    expect($response)->toMatchArray($expectedData)
+        ->and(cache()->get($this->prompt))->toMatchArray($expectedData);
+})->with([
+    'completion' => GptModelTypes::DAVINCI->value,
+    'chat' => GptModelTypes::GPT_3->value,
+]);
+
+it('should not generate word data because invalid json', function (string $model) {
+    Queue::fake();
+
+    config()->set('openai.model', $model);
 
     $responseMock = 'invalid json';
 
-    expect(fn () => (new GptService(completionAdapter($responseMock)))->generate($this->prompt))
-        ->toThrow('Response json invalid');
-});
+    Queue::assertNotPushed(SaveWordAndCreateHistoricJob::class);
 
-it('should generate sentences with Chat openai client', function () {
-    config()->set('openai.model', GptModelTypes::GPT_3->value);
+    $gpt = getGptAdapter($responseMock, $model);
+
+    expect(fn () => (new GptService($gpt['adapter']))->generate($this->prompt))
+        ->toThrow('Response json invalid')
+        ->and(cache()->get($this->prompt))->toBeNull();
+
+    $gpt['mock']->assertSent();
+})->with([
+    'completion' => GptModelTypes::DAVINCI->value,
+    'chat' => GptModelTypes::GPT_3->value,
+]);
+
+it('should generate word data straight from database', function (string $model) {
+    Queue::fake();
+
+    config()->set('openai.model', $model);
+
+    $wordData = Word::factory()->create();
+
+    $gpt = getGptAdapter($wordData->toJson(), $model);
+
+    $response = (new GptService($gpt['adapter']))->generate($wordData->name);
+
+    $gpt['mock']->assertNotSent();
+
+    Queue::assertPushed(SaveWordAndCreateHistoricJob::class, function ($job) use ($wordData) {
+        return $job->data['name'] === $wordData->name;
+    });
+
+    expect($response)->toMatchArray($wordData->toArray())
+        ->and(cache()->get($wordData->name))->toMatchArray($wordData->toArray());
+})->with([
+    'completion' => GptModelTypes::DAVINCI->value,
+    'chat' => GptModelTypes::GPT_3->value,
+]);
+
+it('should generate word data straight from cache', function (string $model) {
+    Queue::fake();
+
+    config()->set('openai.model', $model);
 
     $responseMock = mountResponseMock($this->prompt);
 
-    $response = (new GptService(chatAdapter($responseMock)))->generate($this->prompt);
+    $gpt = getGptAdapter($responseMock, $model);
 
-    expect($response)->toMatchArray(json_decode($responseMock, true));
-});
+    $expectedData = WordDto::fromJson($responseMock)->toArray();
 
-it('should not generate sentences with Chat because json invalid', function () {
-    config()->set('openai.model', GptModelTypes::GPT_3->value);
+    Cache::shouldReceive('remember')
+        ->once()
+        ->andReturn($expectedData);
 
-    $responseMock = 'invalid json';
+    $response = (new GptService($gpt['adapter']))->generate($this->prompt);
 
-    expect(fn () => (new GptService(chatAdapter($responseMock)))->generate($this->prompt))
-        ->toThrow('Response json invalid');
-});
+    $gpt['mock']->assertNotSent();
+
+    Queue::assertPushed(SaveWordAndCreateHistoricJob::class, function ($job) {
+        return $job->data['name'] === $this->prompt;
+    });
+
+    expect($response)->toMatchArray($expectedData);
+})->with([
+    'completion' => GptModelTypes::DAVINCI->value,
+    'chat' => GptModelTypes::GPT_3->value,
+]);
+
+it('should throw exception because return empty word data', function (string $model) {
+    Queue::fake();
+
+    config()->set('openai.model', $model);
+
+    $responseMock = mountResponseMock($this->prompt);
+
+    $gpt = getGptAdapter($responseMock, $model);
+
+    Cache::shouldReceive('remember')
+        ->once()
+        ->andReturn([]);
+
+    expect(fn() => (new GptService($gpt['adapter']))->generate($this->prompt))
+        ->toThrow('Word data not found');
+
+    $gpt['mock']->assertNotSent();
+
+    Queue::assertNotPushed(SaveWordAndCreateHistoricJob::class);
+})->with([
+    'completion' => GptModelTypes::DAVINCI->value,
+    'chat' => GptModelTypes::GPT_3->value,
+]);
+
