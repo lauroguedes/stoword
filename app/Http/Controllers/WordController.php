@@ -17,8 +17,8 @@ class WordController extends Controller
     {
         $user = auth()->user();
         $words = $user->words
-            ->take(6)
-            ->sortByDesc('pivot.created_at');
+            ->sortByDesc('pivot.created_at')
+            ->take(6);
 
         return WordResource::collection($words);
     }

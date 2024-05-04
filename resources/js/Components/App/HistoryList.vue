@@ -8,7 +8,7 @@
                         <span class="font-bold">{{ word.name }}</span>
                         <span class="text-xs text-gray-400 dark:text-gray-500"> - {{ word.meaning.value }}</span>
                     </div>
-                    <Badge text="New" />
+                    <Badge v-if="word.part_of_speech" :text="word.part_of_speech" />
                 </div>
             </li>
         </ul>
@@ -16,19 +16,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import {onMounted, computed} from "vue";
 import Badge from "@/Components/App/Badge.vue";
+import { useFetchGet } from "@/Composables/useFetchGet";
+import {useStore} from "vuex";
 
-const wordsHistory = ref([]);
+const store = useStore();
 
-const fetchHistory = async () => {
-    try {
-        const response = await axios("api/words/history");
-        wordsHistory.value = await response.data;
-    } catch (error) {
-        console.log(error);
+const {loading, error, getData} = useFetchGet();
+
+const wordsHistory = computed(() => store.state.wordsHistory);
+
+onMounted(async () => {
+    await getData(route('words.history'));
+
+    if (error.value) {
+        console.log(error.value);
     }
-};
-
-onMounted(fetchHistory);
+});
 </script>
