@@ -59,6 +59,7 @@ class User extends Authenticatable
     public function words(): BelongsToMany
     {
         return $this->belongsToMany(Word::class)
-            ->withPivot('favorite');
+            ->withPivot('favorite', 'created_at')
+            ->withTimestamps();
     }
 }

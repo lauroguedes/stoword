@@ -34,6 +34,7 @@ class Word extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)
-            ->withPivot('favorite');
+            ->withPivot('favorite', 'created_at')
+            ->withTimestamps();
     }
 }

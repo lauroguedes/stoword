@@ -27,10 +27,13 @@
             />
         </form>
         <Loading v-if="loading" />
-        <InputError class="p-2 mt-2" :message="error" />
-        <WordInfo v-if="wordResponse.name" />
-        <WordMean v-if="wordResponse.meaning?.value" />
-        <Sentences v-if="wordResponse.sentences?.length" />
+        <div v-if="wordResponse.name">
+            <InputError class="p-2 mt-2" :message="error" />
+            <WordInfo />
+            <WordMean v-if="wordResponse.meaning?.value" />
+            <Sentences v-if="wordResponse.sentences?.length" />
+        </div>
+        <HistoryList v-else />
     </div>
 </template>
 
@@ -48,6 +51,7 @@ import ExtraLinks from "./ExtraLinks.vue";
 import WordInfo from "./WordInfo.vue";
 import WordMean from "./WordMean.vue";
 import PaperAirplane from "@/Components/Icons/PaperAirplane.vue";
+import HistoryList from "@/Components/App/HistoryList.vue";
 
 const store = useStore();
 

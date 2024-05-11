@@ -4,14 +4,7 @@
             class="relative text-gray-600 dark:text-gray-400 mb-2"
         >
             <div v-if="word.part_of_speech" class="absolute -top-9 -right-9">
-                <span
-                    class="inline-flex items-center gap-x-2 rounded-full bg-green-600/20 px-2.5 py-1 text-sm font-semi-bold leading-5 text-green-600"
-                >
-                    <span
-                        class="inline-block h-1.5 w-1.5 rounded-full bg-green-600"
-                    ></span>
-                    {{ word.part_of_speech }}
-                </span>
+                <Badge :text="word.part_of_speech" />
             </div>
             <div class="text-xl relative">
                 <BoxTitle class="absolute -top-9 -left-7 bg-sky-500 text-sky-100" text="meaning" />
@@ -29,6 +22,7 @@ import {computed, ref} from "vue";
 import { useStore } from "vuex";
 import ActionsBtn from "@/Components/App/ActionsBtn.vue";
 import BoxTitle from "@/Components/App/BoxTitle.vue";
+import Badge from "@/Components/App/Badge.vue";
 
 const store = useStore();
 

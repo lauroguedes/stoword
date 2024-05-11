@@ -11,11 +11,15 @@ const store = createStore({
     state() {
         return {
             wordResponse: {},
+            wordsHistory: [],
         };
     },
     mutations: {
         setWordResponse(state, response) {
             state.wordResponse = response;
+        },
+        setWordsHistory(state, response) {
+            state.wordsHistory = response;
         },
     },
 });

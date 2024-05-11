@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileConfigController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RunPHPArtisanController;
 use App\Http\Controllers\UpdateAppSettings;
+use App\Http\Controllers\WordController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
