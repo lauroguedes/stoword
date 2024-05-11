@@ -1,8 +1,8 @@
 <template>
     <div class="p-5 mt-5 text-gray-800 dark:text-gray-400 bg-gray-200 dark:bg-gray-800 rounded-md shadow">
-        <h1 class="text-sm uppercase mb-2">My Vocabulary</h1>
+        <h1 class="text-sm uppercase mb-2 font-bold"><GlobeAlt class="mr-2 inline" /> My Vocabulary</h1>
         <ul class="divide-y divide-gray-400 dark:divide-gray-700">
-            <li v-for="word in wordsHistory" :key="word.id" class="py-2 px-1.5 cursor-pointer lowercase hover:bg-gray-300 dark:hover:bg-gray-700/20">
+            <li v-for="word in wordsHistory" :key="word.id" @click="hydrateWordResponse(word)" class="py-2 px-1.5 cursor-pointer lowercase hover:bg-gray-300 dark:hover:bg-gray-700/20">
                 <div class="flex justify-between items-center">
                     <div class="truncate mr-2">
                         <span class="font-bold">{{ word.name }}</span>
@@ -20,6 +20,7 @@ import {onMounted, computed} from "vue";
 import Badge from "@/Components/App/Badge.vue";
 import { useFetchGet } from "@/Composables/useFetchGet";
 import {useStore} from "vuex";
+import GlobeAlt from "@/Components/Icons/GlobeAlt.vue";
 
 const store = useStore();
 
@@ -34,4 +35,8 @@ onMounted(async () => {
         console.log(error.value);
     }
 });
+
+const hydrateWordResponse = (word) => {
+    store.commit('setWordResponse', word);
+}
 </script>
