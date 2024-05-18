@@ -4,6 +4,7 @@ namespace App\Services\GPT\OpenAi;
 
 use App\Services\DTOs\WordDto;
 use Exception;
+use Illuminate\Support\Facades\Validator;
 use OpenAI\Contracts\ClientContract;
 use Throwable;
 
