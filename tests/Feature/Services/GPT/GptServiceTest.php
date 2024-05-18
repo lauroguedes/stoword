@@ -73,6 +73,45 @@ it('should generate word data straight from api request', function (string $mode
     'chat' => GptModelTypes::GPT_3->value,
 ]);
 
+it('should not generate word data because required properties came empty', function (string $model) {
+    Queue::fake();
+
+    config()->set('openai.model', $model);
+
+    $responseMock = json_encode([
+        'word' => '',
+        'ipa_word' => '',
+        'translate' => '',
+        'meaning' => [
+            'value' => '',
+            'translate' => '',
+        ],
+        'part_of_speech' => '',
+        'plural' => '',
+        'synonyms' => '',
+        'word_forms' => '',
+        'sentences' => [
+            [
+                'value' => '',
+                'translate' => '',
+            ],
+        ],
+    ]);
+
+    Queue::assertNotPushed(SaveWordAndCreateHistoricJob::class);
+
+    $gpt = getGptAdapter($responseMock, $model);
+
+    expect(fn () => (new GptService($gpt['adapter']))->generate($this->prompt))
+        ->toThrow('Required properties missing')
+        ->and(cache()->get($this->prompt))->toBeNull();
+
+    $gpt['mock']->assertSent();
+})->with([
+    'completion' => GptModelTypes::DAVINCI->value,
+    'chat' => GptModelTypes::GPT_3->value,
+]);
+
 it('should not generate word data because invalid json', function (string $model) {
     Queue::fake();
 

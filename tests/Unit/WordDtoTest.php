@@ -76,3 +76,13 @@ test('should not return word data from invalid json response', function () {
     expect(fn () => \App\Services\DTOs\WordDto::fromJson('invalid json'))
         ->toThrow('String json invalid');
 });
+
+test('should not return word data, because required properties came empty', function () {
+    $this->responseGpt['word'] = null;
+    $this->responseGpt['translate'] = null;
+    $this->responseGpt['meaning'] = null;
+    $this->responseGpt['sentences'] = null;
+
+    expect(fn () => \App\Services\DTOs\WordDto::fromArray($this->responseGpt))
+        ->toThrow('Required properties missing');
+});

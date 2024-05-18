@@ -27,8 +27,8 @@
             />
         </form>
         <Loading v-if="loading" />
+        <InputError v-if="error" class="p-2 mt-2" :message="error" />
         <div v-if="wordResponse.name">
-            <InputError class="p-2 mt-2" :message="error" />
             <WordInfo />
             <WordMean v-if="wordResponse.meaning?.value" />
             <Sentences v-if="wordResponse.sentences?.length" />

@@ -2,6 +2,8 @@
 
 namespace App\Services\DTOs;
 
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class WordDto
@@ -19,9 +21,13 @@ class WordDto
     ) {
     }
 
+    /**
+     * @throws Throwable
+     * @throws ValidationException
+     */
     public static function fromArray(array $data): self
     {
-        return new self(
+        $instance = new self(
             $data['word'] ?: null,
             $data['translate'] ?: null,
             $data['meaning'] ?: null,
@@ -32,6 +38,10 @@ class WordDto
             $data['synonyms'] ?: null,
             $data['word_forms'] ?: null,
         );
+
+        self::validate($instance->toArray());
+
+        return $instance;
     }
 
     /**
@@ -60,5 +70,26 @@ class WordDto
             'synonyms' => $this->synonyms,
             'forms' => $this->forms,
         ];
+    }
+
+    /**
+     * @throws Throwable
+     * @throws ValidationException
+     */
+    private static function validate(array $content): void
+    {
+        $data = Validator::make($content, [
+            'name' => ['required'],
+            'translate' => ['required'],
+            'meaning' => ['required', 'array'],
+            'sentences' => ['required', 'array'],
+            'part_of_speech' => ['nullable'],
+            'ipa' => ['nullable'],
+            'plural' => ['nullable'],
+            'synonyms' => ['nullable'],
+            'forms' => ['nullable'],
+        ]);
+
+        throw_if($data->fails(), new \Exception('Required properties missing'));
     }
 }
