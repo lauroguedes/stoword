@@ -4,7 +4,7 @@ namespace App\Services\TextToSpeach;
 
 use App\Services\TextToSpeach\VoiceRss\VoiceRssAdapter;
 
-enum TextToSpeachType: string
+enum TextToSpeechType: string
 {
     case VOICE_RSS = 'voice_rss';
 

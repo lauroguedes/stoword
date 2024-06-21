@@ -2,17 +2,21 @@
 
 namespace App\Services\TextToSpeach\VoiceRss;
 
-use App\Services\TextToSpeach\TextToSpeachContract;
+use App\Services\TextToSpeach\TextToSpeechContract;
 
-class VoiceRssAdapter implements TextToSpeachContract
+class VoiceRssAdapter implements TextToSpeechContract
 {
     public function __construct(private readonly VoiceRSS $tts)
     {
     }
 
-    public function speach(string $source): string|array
+    /**
+     * @throws \Throwable
+     */
+    public function speech(string $source): string|array
     {
-        return $this->tts->speech([
+        $data = $this->tts->speech([
+            'ssl' => true,
             'key' => config('services.voice_rss.key'),
             'src' => $source,
             'v' => config('services.voice_rss.v'),
@@ -20,8 +24,11 @@ class VoiceRssAdapter implements TextToSpeachContract
             'r' => config('services.voice_rss.r'),
             'c' => config('services.voice_rss.c'),
             'f' => '44khz_16bit_stereo',
-            'ssml' => 'false',
-            'b64' => config('services.voice_rss.b64'),
+            'b64' => config('services.voice_rss.b64') ? 'true' : 'false'
         ]);
+
+        throw_if($data['error'], new \Exception($data['error']));
+
+        return $data['response'];
     }
 }

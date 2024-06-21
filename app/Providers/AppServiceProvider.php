@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Services\TextToSpeach\TextToSpeachContract;
-use App\Services\TextToSpeach\TextToSpeachType;
+use App\Services\TextToSpeach\TextToSpeechContract;
+use App\Services\TextToSpeach\TextToSpeechType;
 use App\Services\TextToSpeach\VoiceRss\VoiceRSS;
 use App\Services\TextToSpeach\VoiceRss\VoiceRssAdapter;
 use Illuminate\Support\ServiceProvider;
@@ -19,10 +19,10 @@ class AppServiceProvider extends ServiceProvider
             return new VoiceRssAdapter(new VoiceRSS());
         });
 
-        $this->app->bind(TextToSpeachContract::class, function () {
-            $adapter = TextToSpeachType::from(config('tts.service'))->getAdapter();
+        $this->app->bind(TextToSpeechContract::class, function ($app) {
+            $adapter = TextToSpeechType::from(config('tts.service'))->getAdapter();
 
-            return $this->app->make($adapter);
+            return $app->make($adapter);
         });
     }
 

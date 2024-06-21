@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Actions\GetTtsAudio;
 use App\Http\Controllers\Actions\SaveWordAndAttachUserController;
 use App\Http\Controllers\WordController;
 use Illuminate\Http\Request;
@@ -22,6 +23,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')
     ->post('words/save', SaveWordAndAttachUserController::class);
+
+Route::get('tts/audio', GetTtsAudio::class);
 
 Route::get('/words/history', [WordController::class, 'history'])
     ->middleware('auth:sanctum')

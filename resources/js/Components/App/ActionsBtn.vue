@@ -1,5 +1,5 @@
 <template>
-    <div class="inline-flex items-baseline space-x-2">
+    <div class="flex items-center space-x-2">
         <ClipBoard :text="text" />
         <RevealsTranslation :text="translation" />
     </div>
