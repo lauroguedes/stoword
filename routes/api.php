@@ -24,7 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')
     ->post('words/save', SaveWordAndAttachUserController::class);
 
-Route::get('tts/audio', GetTtsAudio::class);
+Route::get('tts/audio', GetTtsAudio::class)
+    ->middleware('auth:sanctum')
+    ->name('tts.audio');
 
 Route::get('/words/history', [WordController::class, 'history'])
     ->middleware('auth:sanctum')
