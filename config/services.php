@@ -31,4 +31,15 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    /*
+     *  Api doc: https://www.voicerss.org/api/
+     * */
+    'voice_rss' => [
+        'key' => env('VOICE_RSS_KEY'),
+        'v' => env('VOICE_RSS_V', 'Linda'),
+        'hl' => env('VOICE_RSS_HL', 'en-us'),
+        'r' => env('VOICE_RSS_R', '0'), // -10 to 10
+        'c' => env('VOICE_RSS_C', 'mp3'), // mp3, wav, ogg
+        'b64' => env('VOICE_RSS_B64', false),
+    ],
 ];
