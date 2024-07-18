@@ -1,7 +1,6 @@
 <template>
     <div class="p-5 mt-5 text-gray-800 dark:text-gray-400 bg-gray-200 dark:bg-gray-800 rounded-md shadow">
         <h1 class="text-sm uppercase mb-2 font-bold"><GlobeAlt class="mr-2 inline" /> My Vocabulary</h1>
-        <AudioPlayer src="regards" />
         <ul class="divide-y divide-gray-400 dark:divide-gray-700">
             <li v-for="word in wordsHistory" :key="word.id" @click="hydrateWordResponse(word)" class="py-2 px-1.5 cursor-pointer lowercase hover:bg-gray-300 dark:hover:bg-gray-700/20">
                 <div class="flex justify-between items-center">
@@ -22,7 +21,6 @@ import Badge from "@/Components/App/Badge.vue";
 import { useFetchGet } from "@/Composables/useFetchGet";
 import {useStore} from "vuex";
 import GlobeAlt from "@/Components/Icons/GlobeAlt.vue";
-import AudioPlayer from "@/Components/App/AudioPlayer.vue";
 
 const store = useStore();
 
